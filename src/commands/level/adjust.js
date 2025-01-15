@@ -14,21 +14,21 @@ const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("adjust")
-    .setDescription("Adjust user level or XP")
+    .setDescription(`${utils.tags.mod} Adjust a user level or XP.`)
     .addSubcommand((subcommand) =>
       subcommand
         .setName("level")
-        .setDescription(`${utils.tags.new} ${utils.tags.mod} Adjust user level`)
+        .setDescription(`${utils.tags.mod} Adjust a user level.`)
         .addUserOption((option) =>
           option
             .setName("user")
-            .setDescription("Pick a member to adjust their level")
+            .setDescription("Pick a member to adjust their level.")
             .setRequired(true)
         )
         .addStringOption((option) =>
           option
             .setName("action")
-            .setDescription("Select which action to perform")
+            .setDescription("Select which action to perform.")
             .setRequired(true)
             .addChoices(
               {
@@ -44,7 +44,7 @@ module.exports = {
         .addIntegerOption((option) =>
           option
             .setName("amount")
-            .setDescription("Input the amount of levels")
+            .setDescription("Input the amount of levels.")
             .setRequired(true)
             .setMinValue(1)
             .setMaxValue(maxLevel)
@@ -53,17 +53,17 @@ module.exports = {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("xp")
-        .setDescription(`${utils.tags.new} ${utils.tags.mod} Adjust user xp`)
+        .setDescription(`${utils.tags.mod} Adjust a user XP.`)
         .addUserOption((option) =>
           option
             .setName("user")
-            .setDescription("Pick a member to adjust their xp")
+            .setDescription("Pick a member to adjust their XP.")
             .setRequired(true)
         )
         .addStringOption((option) =>
           option
             .setName("action")
-            .setDescription("Select which action to perform")
+            .setDescription("Select which action to perform.")
             .setRequired(true)
             .addChoices(
               {
@@ -79,7 +79,7 @@ module.exports = {
         .addIntegerOption((option) =>
           option
             .setName("amount")
-            .setDescription("Input the amount of xp")
+            .setDescription("Input the amount of XP.")
             .setRequired(true)
             .setMinValue(1)
             .setMaxValue(XPreqs[maxLevel - 1])

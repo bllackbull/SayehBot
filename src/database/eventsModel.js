@@ -10,6 +10,7 @@ const eventsSchema = new mongoose.Schema({
   Video: Boolean,
   Level: Boolean,
   Moderation: Boolean,
+  PlayerStart: Boolean,
 });
 
 module.exports = mongoose.model("events", eventsSchema);

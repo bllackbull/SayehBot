@@ -14,16 +14,12 @@ module.exports = {
   data: new ContextMenuCommandBuilder()
     .setName("warn author")
     .setType(ApplicationCommandType.Message)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
     .setDMPermission(false),
 
   async execute(interaction) {
     let success = false;
     const { guild, channel, user, targetId } = interaction;
-
-    const member = await guild.members.fetch(user.id);
-    const hasPermission = member.permissions.has(
-      PermissionFlagsBits.ManageMessages
-    );
 
     const targetMassge = await channel.messages.fetch(targetId);
     const targatHasPermission = targetMassge.member.permissions.has(
@@ -32,8 +28,6 @@ module.exports = {
 
     if (mongoose.connection.readyState !== 1) {
       errorHandler.handleDatabaseError(interaction);
-    } else if (!hasPermission) {
-      errorHandler.handleAccessDeniedError(interaction);
     } else if (targatHasPermission || targetId == user.id) {
       errorHandler.handleWarnError(interaction);
     } else {

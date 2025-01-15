@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { getPing } = require("../../utils/client/getPing");
+const { getPing } = require("../../utils/client/handleProcessActions");
 const errorHandler = require("../../utils/main/handleErrors");
 const { pageReact } = require("../../utils/main/handleReaction");
 const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
@@ -8,9 +8,9 @@ const utils = require("../../utils/main/mainUtils");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("ping")
-    .setDescription("Get info about latency of the bot")
+    .setDescription("Get info about latency of the bot.")
     .addStringOption((option) =>
-      option.setName("host").setDescription("Input an host name or ip")
+      option.setName("host").setDescription("Input an host name or ip.")
     ),
 
   async execute(interaction, client) {
@@ -22,11 +22,10 @@ module.exports = {
     const host = interaction.options.getString("host") || "4.2.2.4";
     const pingResult = await getPing(host);
 
-    if (pingResult <= 2) {
-      if (pingResult == 1)
-        await errorHandler.handlePingConnectionError(interaction, host);
-      else if (pingResult == 2)
-        await errorHandler.handlePingUnknownError(interaction);
+    if (pingResult == 1) {
+      await errorHandler.handlePingConnectionError(interaction, host);
+    } else if (pingResult == 2) {
+      await errorHandler.handlePingUnknownError(interaction);
     } else {
       const match =
         /rtt min\/avg\/max\/mdev = (\d+\.\d+)\/(\d+\.\d+)\/(\d+\.\d+)\/(\d+\.\d+) ms/.exec(
@@ -66,14 +65,15 @@ module.exports = {
 
       collector.on("collect", async (reaction, user) => {
         if (user.bot) return;
+        const { users, emoji } = reaction;
 
-        await reaction.users.remove(user.id);
+        await users.remove(user.id);
 
-        if (reaction.emoji.name == "➡" && page < totalPages - 1) {
+        if (emoji.name.includes("next") && page < totalPages - 1) {
           page++;
 
           embed.setThumbnail();
-        } else if (reaction.emoji.name == "⬅" && page !== 0) {
+        } else if (emoji.name.includes("previous") && page !== 0) {
           --page;
 
           embed.setThumbnail(utils.thumbnails.ping);

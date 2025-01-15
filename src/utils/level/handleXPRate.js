@@ -1,5 +1,22 @@
 const xpModel = require("../../database/xpModel");
+const { XPreqs, keyLevels, keyPercentages } = require("./cardUtils");
 const { subRole1, subRole2, subRole3, boostRole } = process.env;
+
+function calculatePercentage(level) {
+  for (let i = 0; i < keyLevels.length - 1; i++) {
+    if (level >= keyLevels[i] && level < keyLevels[i + 1]) {
+      const startLevel = keyLevels[i];
+      const endLevel = keyLevels[i + 1];
+      const startPercentage = keyPercentages[i];
+      const endPercentage = keyPercentages[i + 1];
+      const levelRange = endLevel - startLevel;
+      const percentageRange = startPercentage - endPercentage;
+      const levelProgress = level - startLevel;
+      return startPercentage - (percentageRange * levelProgress) / levelRange;
+    }
+  }
+  return keyPercentages[keyPercentages.length - 1];
+}
 
 module.exports.calculateXP = async (input, user) => {
   const xpProfile = await xpModel.findOne({
@@ -7,9 +24,9 @@ module.exports.calculateXP = async (input, user) => {
   });
 
   const baseXP = xpProfile ? xpProfile.basexp : 20;
-  const scale = 1.1;
-
-  const XP = Math.floor(baseXP * Math.pow(scale, user.level));
+  const maxXP = XPreqs[user.level];
+  const percentage = calculatePercentage(user.level);
+  const XP = Math.floor((percentage / 100) * maxXP * (baseXP / 20));
 
   let boost = 1;
 

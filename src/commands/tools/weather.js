@@ -7,17 +7,17 @@ const axios = require("axios");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("weather")
-    .setDescription("Get info about weather conditions")
+    .setDescription("Get info about weather conditions.")
     .addStringOption((option) =>
       option
         .setName("location")
-        .setDescription("Input a location name")
+        .setDescription("Input a location name.")
         .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("unit")
-        .setDescription("Select a degree unit (default: °C)")
+        .setDescription("Select a degree unit. (default: °C)")
         .addChoices(
           {
             name: "°C",

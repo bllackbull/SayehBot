@@ -16,7 +16,7 @@ const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("info")
-    .setDescription(`${utils.tags.updated} ${utils.tags.mod} See bot information`)
+    .setDescription(`${utils.tags.mod} See bot information.`)
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .setDMPermission(false),
 
@@ -69,6 +69,7 @@ module.exports = {
         video: eventsList?.Video ?? false,
         level: eventsList?.Level ?? false,
         moderation: eventsList?.Moderation ?? false,
+        player: eventsList?.PlayerStart ?? false,
       };
 
       const channelsList = await channelModel.findOne({
@@ -87,13 +88,10 @@ module.exports = {
       };
 
       const channelNames = {};
-
       for (const [key, channelId] of Object.entries(channelString)) {
         if (channelId) {
           const channel = await client.channels.fetch(channelId);
-
-          if (channel) channelNames[key] = channel.name;
-          else channelNames[key] = undefined;
+          channelNames[key] = channel ? channel.name : undefined;
         } else {
           channelNames[key] = undefined;
         }
@@ -134,6 +132,9 @@ module.exports = {
       }
                               > **${utils.events.mod}** : ${
         eventsString.moderation ? enabled : disabled
+      }
+                              > **${utils.events.player}** : ${
+        eventsString.player ? enabled : disabled
       }`;
 
       const channelsDescription = `### Special Channels:
@@ -192,14 +193,15 @@ module.exports = {
 
       collector.on("collect", async (reaction, user) => {
         if (user.bot) return;
+        const { users, emoji } = reaction;
 
-        await reaction.users.remove(user.id);
+        await users.remove(user.id);
 
-        if (reaction.emoji.name === "➡" && page < totalPages - 1) {
+        if (emoji.name.includes("next") && page < totalPages - 1) {
           page++;
-        } else if (reaction.emoji.name === "⬅" && page !== 0) {
+        } else if (emoji.name.includes("previous") && page !== 0) {
           --page;
-        }
+        } else return;
 
         embed.setDescription(pages[page]).setFooter({
           text: `${utils.texts.bot} | Page ${page + 1} of ${totalPages}`,

@@ -4,7 +4,7 @@ function response(result) {
   if (result.playlist) return;
 
   const respond = result.tracks.slice(0, 5).map((song) => ({
-    name: `[${setDurationLabel(song.duration)}] "${song.title}" by "${
+    name: `[${setDurationLabel(song.duration)}] "${song.cleanTitle}" by "${
       song.author
     }" (${song.raw.source})`,
     value: song.url,

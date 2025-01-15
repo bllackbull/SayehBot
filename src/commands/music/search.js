@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, PermissionsBitField } = require("discord.js");
+const { QueryType } = require("discord-player");
 const { handleData } = require("../../utils/player/handlePlayerData");
 const { search } = require("../../utils/player/handleSearch");
 const { createQueue } = require("../../utils/player/createQueue");
@@ -11,12 +12,23 @@ const deletionHandler = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("search")
-    .setDescription("Search in YouTube")
+    .setDescription("Search for a track.")
     .addStringOption((option) =>
       option
         .setName("query")
-        .setDescription("Input a track name or url")
+        .setDescription("Input a track name or url.")
         .setRequired(true)
+    )
+    .addStringOption((option) =>
+      option
+        .setName("source")
+        .setDescription("Select a source to search in.")
+        .addChoices(
+          { name: "YouTube", value: QueryType.YOUTUBE_SEARCH },
+          { name: "Spotify", value: QueryType.SPOTIFY_SEARCH },
+          { name: "SoundCloud", value: QueryType.SOUNDCLOUD_SEARCH },
+          { name: "Apple Music", value: QueryType.APPLE_MUSIC_SEARCH }
+        )
     )
     .setDMPermission(false),
 
@@ -34,7 +46,11 @@ module.exports = {
       errorHandler.handleVoiceChannelError(interaction);
     } else {
       const query = interaction.options.getString("query", true);
-      const result = await search(query, "youtubeSearch");
+
+      const source = interaction.options.get("source");
+      const sourceValue = source ? source.value : QueryType.YOUTUBE_SEARCH;
+
+      const result = await search(query, sourceValue);
 
       if (!result.hasTracks()) {
         errorHandler.handleNoResultError(interaction);
@@ -46,7 +62,11 @@ module.exports = {
 
         const isLink = query.startsWith("https");
 
-        const resultEmbed = embedCreator.createSearchEmbed(result, isLink);
+        const resultEmbed = embedCreator.createSearchEmbed(
+          result,
+          sourceValue,
+          isLink
+        );
 
         await interaction.editReply({
           embeds: [resultEmbed],
@@ -58,12 +78,12 @@ module.exports = {
         const collector = searchReact(interaction, searchEmbed, isLink);
 
         collector.on("collect", async (reaction, user) => {
+          if (user.bot) return;
+          if (!interaction.member.voice.channel) return;
+
           const queue =
             client.player.nodes.get(interaction.guildId) ||
             (await createQueue(client, interaction, result));
-
-          if (user.bot) return;
-          if (!interaction.member.voice.channel) return;
 
           if (!queue.connection) {
             await queue.connect(interaction.member.voice.channel);

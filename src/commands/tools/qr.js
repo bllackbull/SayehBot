@@ -6,11 +6,11 @@ const axios = require("axios");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("qr")
-    .setDescription("Create a QR code")
+    .setDescription("Create a QR code.")
     .addStringOption((option) =>
       option
         .setName("query")
-        .setDescription("Input a text or url")
+        .setDescription("Input a text or url.")
         .setRequired(true)
     ),
 

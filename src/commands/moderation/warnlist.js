@@ -14,7 +14,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("warnlist")
     .setDescription(
-      `${utils.tags.mod} View a list of users and their warn records`
+      `${utils.tags.mod} View a list of users and their warn records.`
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .setDMPermission(false),
@@ -35,7 +35,7 @@ module.exports = {
         .sort({ Warns: -1 });
 
       let page = 0;
-      let totalPages = 0;
+      let totalPages = 1;
       let warnArray;
 
       const embed = new EmbedBuilder()
@@ -59,8 +59,7 @@ module.exports = {
 
         warnArray = warnList.split("\n");
 
-        totalPages =
-          warnArray.length > 10 ? Math.ceil(warnArray.length / 10) : 1;
+        if (warnArray.length > 10) totalPages = warnArray.length / 10;
 
         const slicedArray = warnArray
           .slice(page * 10, page * 10 + 10)
@@ -87,12 +86,13 @@ module.exports = {
 
         collector.on("collect", async (reaction, user) => {
           if (user.bot) return;
+          const { users, emoji } = reaction;
 
-          await reaction.users.remove(user.id);
+          await users.remove(user.id);
 
-          if (reaction.emoji.name === "➡" && page < totalPages - 1) {
+          if (emoji.name.includes("next") && page < totalPages - 1) {
             page++;
-          } else if (reaction.emoji.name === "⬅" && page !== 0) {
+          } else if (emoji.name.includes("previous") && page !== 0) {
             --page;
           } else return;
 

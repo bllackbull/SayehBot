@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
+const { QueryType } = require("discord-player");
 const errorHandler = require("../../utils/main/handleErrors");
 const { titles } = require("../../utils/player/musicUtils");
 const { handleData } = require("../../utils/player/handlePlayerData");
@@ -12,20 +13,31 @@ const deletionHandler = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("insert")
-    .setDescription("Insert a track in a certain position in the current queue")
+    .setDescription("Add a track in a certain position in the current queue.")
     .addStringOption((option) =>
       option
         .setName("query")
-        .setDescription("Input a track name or url")
+        .setDescription("Input a track name or url.")
         .setRequired(true)
         .setAutocomplete(true)
     )
     .addIntegerOption((option) =>
       option
         .setName("position")
-        .setDescription("Input a queue position to insert the track in")
+        .setDescription("Input a queue position to insert the track in.")
         .setMinValue(1)
         .setRequired(true)
+    )
+    .addStringOption((option) =>
+      option
+        .setName("source")
+        .setDescription("Select a source to search in.")
+        .addChoices(
+          { name: "YouTube", value: QueryType.YOUTUBE },
+          { name: "Spotify", value: QueryType.SPOTIFY_SEARCH },
+          { name: "SoundCloud", value: QueryType.SOUNDCLOUD },
+          { name: "Apple Music", value: QueryType.APPLE_MUSIC_SEARCH }
+        )
     )
     .setDMPermission(false),
 
@@ -34,7 +46,10 @@ module.exports = {
     const query = interaction.options.getString("query", true);
     if (!query) return;
 
-    const engine = query.startsWith("https") ? "auto" : "youtube";
+    const source = interaction.options.get("source");
+    const sourceValue = source ? source.value : QueryType.YOUTUBE;
+
+    const engine = query.startsWith("https") ? "auto" : sourceValue;
     const result = await search(query, engine);
     if (!result.hasTracks()) return;
 
@@ -55,7 +70,11 @@ module.exports = {
       errorHandler.handleVoiceChannelError(interaction);
     } else {
       const query = interaction.options.getString("query", true);
-      const engine = query.startsWith("https") ? "auto" : "youtube";
+
+      const source = interaction.options.get("source");
+      const sourceValue = source ? source.value : QueryType.YOUTUBE;
+
+      const engine = query.startsWith("https") ? "auto" : sourceValue;
       const result = await search(query, engine);
 
       if (!result.hasTracks()) {
@@ -100,9 +119,7 @@ module.exports = {
               song
             );
 
-            if (!nowPlaying) {
-              embed.setTitle(`**${titles.track} ${target}**`);
-            }
+            if (!nowPlaying) embed.setTitle(`**${titles.track} ${target}**`);
 
             await handleData(interaction.guildId, nowPlaying);
 

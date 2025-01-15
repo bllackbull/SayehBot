@@ -4,13 +4,14 @@ const { getUser } = require("../../utils/level/handleLevel");
 const { generateCard } = require("../../utils/level/generateCard");
 const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 const errorHandler = require("../../utils/main/handleErrors");
+const { tags } = require("../../utils/main/mainUtils");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("rank")
-    .setDescription("Get a user rank card")
+    .setDescription(`${tags.images} Get a user rank card.`)
     .addUserOption((option) =>
-      option.setName("user").setDescription("Pick a member").setRequired(false)
+      option.setName("user").setDescription("Pick a member.").setRequired(false)
     )
     .setDMPermission(false),
 

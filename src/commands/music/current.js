@@ -7,7 +7,7 @@ const deletionHandler = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("current")
-    .setDescription("Get info about the current track")
+    .setDescription("Get info about the currently playing track.")
     .setDMPermission(false),
 
   async execute(interaction, client) {

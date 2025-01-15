@@ -1,17 +1,17 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const utils = require("../../utils/main/mainUtils");
+const overwatch = require("overwatch-api");
 const { findStatIndex } = require("../../utils/api/overwatchIndex");
 const { createGameButtons } = require("../../utils/main/createButtons");
 const { bookmark } = require("../../utils/api/handleBookmark");
 const { pageReact } = require("../../utils/main/handleReaction");
 const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 const errorHandler = require("../../utils/main/handleErrors");
-const overwatch = require("overwatch-api");
+const utils = require("../../utils/main/mainUtils");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("overwatch")
-    .setDescription(`${utils.tags.game} Get Overwatch stats`)
+    .setDescription(`${utils.tags.game} Get Overwatch stats.`)
     .addStringOption((option) =>
       option
         .setName("username")
@@ -158,12 +158,13 @@ module.exports = {
 
         collector.on("collect", async (reaction, user) => {
           if (user.bot) return;
+          const { users, emoji } = reaction;
 
-          await reaction.users.remove(user.id);
+          await users.remove(user.id);
 
-          if (reaction.emoji.name == "➡" && page < totalPages - 1) {
+          if (emoji.name.includes("next") && page < totalPages - 1) {
             page++;
-          } else if (reaction.emoji.name == "⬅" && page !== 0) {
+          } else if (emoji.name.includes("previous") && page !== 0) {
             --page;
           } else return;
 

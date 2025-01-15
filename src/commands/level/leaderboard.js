@@ -8,7 +8,7 @@ const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("leaderboard")
-    .setDescription(`${utils.tags.updated} Get top 10 users in the leaderboard`)
+    .setDescription(`${utils.tags.tools} Get top 10 users in the leaderboard.`)
     .setDMPermission(false),
 
   async execute(interaction) {

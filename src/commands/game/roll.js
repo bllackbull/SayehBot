@@ -2,14 +2,14 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 const { handleRollXp } = require("../../utils/level/handleLevel");
 const { getUser } = require("../../utils/level/handleLevel");
-const utils = require("../../utils/main/mainUtils");
 const { maxLevel } = require("../../utils/level/cardUtils");
 const eventsModel = require("../../database/eventsModel");
+const utils = require("../../utils/main/mainUtils");
 
 const rollCooldown = new Set();
 let cacheRoll = 0;
 
-function getRoll() {
+function getRoll(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
 
@@ -17,26 +17,26 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("roll")
     .setDescription(
-      `${utils.tags.game} Roll a random number between 1 - 100 or custom amounts`
+      `${utils.tags.game} Roll a random number between 1 - 100 or custom amounts.`
     )
     .setDMPermission(false)
     .addIntegerOption((option) =>
       option
         .setName("min")
-        .setDescription("Set a custom minimum amount (default: 1)")
+        .setDescription("Set a custom minimum amount. (default: 1)")
         .setMinValue(0)
     )
     .addIntegerOption((option) =>
       option
         .setName("max")
-        .setDescription("Set a custom maximum amount (default: 100)")
+        .setDescription("Set a custom maximum amount. (default: 100)")
         .setMinValue(1)
     )
     .addIntegerOption((option) =>
       option
         .setName("guess")
         .setDescription(
-          "Guess right your upcoming roll to win 50,000 XP! (1 - 100 only)"
+          "Guess right your upcoming roll to win 10,000 XP! (1 - 100 only)"
         )
         .setMinValue(1)
         .setMaxValue(100)
@@ -50,14 +50,14 @@ module.exports = {
     let custom = true;
     if (min == 1 && max == 100) custom = false;
 
-    let roll = getRoll();
+    let roll = getRoll(min, max);
 
     do {
-      roll = getRoll();
+      roll = getRoll(min, max);
     } while (roll > max || roll < min);
 
     let bonus = false;
-    if (cacheRoll == roll) bonus = 10_000;
+    if (cacheRoll == roll) bonus = 1_000;
     cacheRoll = roll;
 
     await interaction.reply({
@@ -119,7 +119,7 @@ module.exports = {
 
       if (rollString[0] == rollString[1]) {
         type = 1;
-        amount = roll * roll; /// 121 to 9801
+        amount = roll * roll; /// 121 to 9,801
       } else if (rollString[1] == 0) {
         type = 1;
         amount = roll * 10; /// 10 to 900
@@ -137,7 +137,7 @@ module.exports = {
 
     if (guess && roll == guess) {
       type = 1;
-      amount += 50_000;
+      amount += 10_000;
     }
 
     amount += bonus;

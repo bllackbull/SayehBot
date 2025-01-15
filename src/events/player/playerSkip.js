@@ -7,19 +7,19 @@ module.exports = {
   isPlayerEvent: true,
 
   async execute(queue, track) {
-    console.log(
-      `${consoleTags.player} Player skipped a track due to an issue.`
-    );
+    // console.log(
+    //   `${consoleTags.player} Player skipped a track due to an issue.`
+    // );
 
-    const channel = queue.metadata.channel;
-    if (!channel) return;
+    // const channel = queue.metadata.channel;
+    // if (!channel) return;
 
-    const embed = handlePlayerSkipError();
+    // const embed = handlePlayerSkipError(track);
 
-    const msg = await channel.send({
-      embeds: [embed],
-    });
+    // const msg = await channel.send({
+    //   embeds: [embed],
+    // });
 
-    handleEventDelection(msg, false);
+    // handleEventDelection(msg, false);
   },
 };

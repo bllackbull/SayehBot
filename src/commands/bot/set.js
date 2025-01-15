@@ -10,12 +10,12 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("set")
     .setDescription(
-      `${utils.tags.new} ${utils.tags.mod} Set a channel as a special channel`
+      `${utils.tags.mod} Set a custom channel as a special channel.`
     )
     .addStringOption((option) =>
       option
         .setName("role")
-        .setDescription("Choose a role to give to a channel")
+        .setDescription("Choose a role to give to your selected channel.")
         .setRequired(true)
         .addChoices(
           {
@@ -55,7 +55,7 @@ module.exports = {
     .addChannelOption((option) =>
       option
         .setName("channel")
-        .setDescription("Select a channel")
+        .setDescription("Select a channel.")
         .setRequired(false)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)

@@ -11,11 +11,11 @@ const utils = require("../../utils/main/mainUtils");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("case")
-    .setDescription(`${utils.tags.mod} Get info about a report case`)
+    .setDescription(`${utils.tags.mod} Get info about a report case.`)
     .addStringOption((option) =>
       option
         .setName("case-id")
-        .setDescription("Input a Case ID")
+        .setDescription("Input a Case ID.")
         .setRequired(true)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)

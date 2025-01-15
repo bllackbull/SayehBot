@@ -1,4 +1,4 @@
-# SayehBot v1.7.1 Installation Guide
+# SayehBot v1.7.2 Installation Guide
 > **Recommended:** use `sudo -s` to make sure you have permission.
 
 ## 1. Update Server
@@ -35,8 +35,8 @@ OR install manually :
 ## 8. Create package.json file
 - In the main folder, use this command: `npm init`
 - for name, type and enter: `sayehbot`
-- for version, type and enter: `1.7.1`
-- for description, type and enter: `Official Sayeh's discord server bot`
+- for version, type and enter: `1.7.2`
+- for description, type and enter: `Sayeh's official discord bot`
 - for main file, type and enter: `./src/bot.js`
 - for test command, type and enter: `node .`
 - You can skip the rest by pressing enter until the file is created and done.
@@ -46,7 +46,7 @@ OR install manually :
 
 - `npm i axios canvas@2.11.2 discord-giveaways@6.0.1 moment-timezone@0.5.37 mongoose ms@2.1.3 nasa-apod@0.2.0 node-fetch@3.2.10 node-twitch@0.4.7`
 
-- `npm i rss-parser@3.12.0 node-pre-gyp node-opus opusscript@0.0.8 noderiowrapper@1.1.1 steam-market-pricing@2.0.0 oxr@1.1.4 movier@3.0.1 genius-lyrics@4.4.3 steam-searcher@1.0.4 howlongtobeat node-os-utils overwatch-api @matsukky/twitchtracker googleapis`
+- `npm i rss-parser@3.12.0 node-pre-gyp node-opus opusscript@0.0.8 noderiowrapper@1.1.1 steam-market-pricing@2.0.0 oxr@1.1.4 movier@3.0.1 genius-lyrics@4.4.3 steam-searcher@1.0.4 howlongtobeat node-os-utils overwatch-api @matsukky/twitchtracker googleapis openai gpt-tokenizer`
 
 - `npm i ffmpeg-static libsodium-wrappers@0.7.10 discord-player`
 
@@ -124,4 +124,4 @@ Space Font installation :
   - To cut or rename a directory use `mv [current directory] [destination directory]`
   - Reboot the server with `sudo reboot`
 
-<p align="center"><a href="https://github.com/iamblackbull/SayehBot"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Up_arrow_white.svg/1024px-Up_arrow_white.svg.png" alt="Back to top" height="35"/></a></p>
+<p align="center"><a href="https://github.com/bllackbull/SayehBot"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Up_arrow_white.svg/1024px-Up_arrow_white.svg.png" alt="Back to top" height="35"/></a></p>

@@ -7,7 +7,7 @@ const deletionHandler = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("pause")
-    .setDescription("Toggle pause mode of the current track")
+    .setDescription("Toggle pause / resume mode of the current track.")
     .setDMPermission(false),
 
   async execute(interaction, client) {

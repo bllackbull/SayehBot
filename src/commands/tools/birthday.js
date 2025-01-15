@@ -8,13 +8,13 @@ const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("birthday")
-    .setDescription("Add a birthday date")
+    .setDescription("Add / Edit your birthday date.")
     .addIntegerOption((options) =>
       options
         .setName("day")
         .setMinValue(1)
         .setMaxValue(31)
-        .setDescription("Day of birthday")
+        .setDescription("Input the day of your birthday.")
         .setRequired(true)
     )
     .addIntegerOption((optins) =>
@@ -22,7 +22,7 @@ module.exports = {
         .setName("month")
         .setMinValue(1)
         .setMaxValue(12)
-        .setDescription("Month of birthday")
+        .setDescription("Input the month of your birthday.")
         .setRequired(true)
     )
     .addIntegerOption((optins) =>
@@ -30,9 +30,10 @@ module.exports = {
         .setName("year")
         .setMinValue(1922)
         .setMaxValue(2022)
-        .setDescription("Year of birthday")
+        .setDescription("Input the year of your birthday.")
         .setRequired(true)
-    ),
+    )
+    .setDMPermission(false),
 
   async execute(interaction) {
     let success = false;
@@ -46,7 +47,7 @@ module.exports = {
     const day = interaction.options.getInteger("day");
     const month = interaction.options.getInteger("month");
     const year = interaction.options.getInteger("year");
-    const age = currentYear - interaction.options.getInteger("year");
+    const age = currentYear - year;
 
     if (month == 2 && day > 28) {
       validDate = false;
@@ -70,9 +71,11 @@ module.exports = {
     } else {
       const birthdayProfile = await birthdayModel.findOneAndUpdate(
         {
+          GuildId: interaction.guildId,
           User: interaction.user.id,
         },
         {
+          Username: interaction.user.globalName || interaction.user.username,
           Birthday: `${day} / ${month}`,
           Day: `${day}`,
           Month: `${month}`,

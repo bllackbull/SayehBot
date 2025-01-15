@@ -9,15 +9,15 @@ const errorHandler = require("../../utils/main/handleErrors");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("delete")
-    .setDescription(`${utils.tags.mod} Delete a specific message in a channel`)
+    .setDescription(`${utils.tags.mod} Delete a specific message in a channel.`)
     .addStringOption((options) =>
       options
         .setName("message-id")
-        .setDescription("Input the message-id")
+        .setDescription("Input the message-id.")
         .setRequired(true)
     )
     .addChannelOption((options) =>
-      options.setName("channel").setDescription("Choose the message channel")
+      options.setName("channel").setDescription("Choose the message channel.")
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .setDMPermission(false),

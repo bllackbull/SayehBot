@@ -1,5 +1,5 @@
 const { handleSkipData } = require("./handlePlayerData");
-const { createTrackEmbed } = require("./createMusicEmbed");
+const { createTrackEmbed, createRemoveEmbed } = require("./createMusicEmbed");
 const { createButtons } = require("../main/createButtons");
 const { handleQueueError } = require("../main/handleErrors");
 const { titles } = require("./musicUtils");
@@ -80,7 +80,18 @@ async function previous(interaction, queue, previous) {
   }
 }
 
+async function remove(interaction, queue, target) {
+  queue.removeTrack(target);
+
+  const embed = createRemoveEmbed(target);
+
+  await interaction.editReply({
+    embeds: [embed],
+  });
+}
+
 module.exports = {
   skip,
   previous,
+  remove,
 };

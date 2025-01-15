@@ -29,7 +29,7 @@ AudioFilters.define(
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("filter")
-    .setDescription("Toggle audio filters for the current queue")
+    .setDescription("Toggle audio effects for the current queue.")
     .setDMPermission(false),
 
   async execute(interaction, client) {

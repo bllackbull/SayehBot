@@ -1,17 +1,17 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const youtubeHandler = require("../../utils/api/youtubeData");
 const { handleNoResultError } = require("../../utils/main/handleErrors");
-const utils = require("../../utils/main/mainUtils");
 const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
+const utils = require("../../utils/main/mainUtils");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("youtube")
-    .setDescription("Get info about a youtube channel")
+    .setDescription("Get info about a youtube channel.")
     .addStringOption((option) =>
       option
         .setName("channel")
-        .setDescription("Input a youtube channel name")
+        .setDescription("Input a youtube channel name.")
         .setRequired(true)
     ),
 
@@ -41,7 +41,7 @@ module.exports = {
 
       const title = channelData.brandingSettings.channel.title;
       const url = `https://youtube.com/channel/${channelData.id}`;
-      const subCount = `**${channelData.statistics.subscriberCount}** subscribers`;
+      const subCount = `**${channelData.statistics.subscriberCount.toLocaleString()}** subscribers`;
       const viewCount = `**${channelData.statistics.viewCount}** views`;
       const videoCount = `**${channelData.statistics.videoCount}** videos`;
       const channelDescription =
@@ -51,7 +51,7 @@ module.exports = {
         .setTitle(title)
         .setURL(url)
         .setDescription(
-          `${subCount}\n${viewCount}\n${videoCount}\n\n${channelDescription}\n\n### Latest Videos :\n${videoList}`
+          `${subCount}\n${viewCount}\n${videoCount}\n\n${channelDescription}\n\n### Latest Videos :\n${videoList}\n\n **Channel Id :** ${channelId}`
         )
         .setColor(utils.colors.youtube)
         .setThumbnail(channelData.snippet.thumbnails.high.url)

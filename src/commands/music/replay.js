@@ -7,7 +7,7 @@ const deletionHandler = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("replay")
-    .setDescription("Replay the current track back from the top")
+    .setDescription("Play the current track back from the top.")
     .setDMPermission(false),
 
   async execute(interaction, client) {

@@ -303,22 +303,32 @@ const unknownError = new EmbedBuilder()
   .setThumbnail(thumbnails.error);
 
 async function handleUnknownError(interaction) {
-  if (interaction.deferred || interaction.replied) {
+  const { deferred, replied, customId, commandName } = interaction;
+
+  if (deferred || replied) {
     await interaction.editReply({
       embeds: [unknownError],
     });
   } else {
     await interaction.reply({
       embeds: [unknownError],
-      ephemeral: interaction.customId?.includes("favorite-button"),
+      ephemeral: customId?.includes("favorite-button") || commandName === "pm2",
     });
   }
 }
 
 async function handleUnknownErrorMessage(message) {
-  const msg = await message.reply({
-    embeds: [unknownError],
-  });
+  let msg;
+
+  if (message.replied) {
+    msg = await message.edit({
+      embeds: [unknownError],
+    });
+  } else {
+    msg = await message.reply({
+      embeds: [unknownError],
+    });
+  }
 
   return msg;
 }
@@ -369,7 +379,7 @@ async function handleXpError(interaction, target) {
   const XPError = new EmbedBuilder()
     .setTitle("Not enough XP")
     .setDescription(
-      `${target} does not have enough XP or their already have too much XP.\nTry again with ${tag}.`
+      `${target} does not have enough XP or they already have too much XP.\nTry again with ${tag}.`
     )
     .setColor(colors.warning)
     .setThumbnail(thumbnails.warning);
@@ -400,11 +410,11 @@ async function handleLeaderboardError(interaction) {
 }
 
 async function handleAPIError(interaction) {
-  warningEmbed
-    .setTitle("**API Error**")
-    .setDescription(
-      "API is not responding at the moment. Please try again later."
-    );
+  const description =
+    interaction.errorMessage ??
+    "API is not responding at the moment. Please try again later.";
+
+  warningEmbed.setTitle("**API Error**").setDescription(description);
 
   if (interaction.deferred || interaction.replied) {
     await interaction.editReply({
@@ -502,11 +512,11 @@ async function handleTooLongTrackError(interaction) {
 }
 
 async function handleRateLimitError(interaction) {
-  warningEmbed
-    .setTitle("**Rate Limit Reached**")
-    .setDescription(
-      "Rate limit for this action has been reached. Please try again later."
-    );
+  const description =
+    interaction.errorMessage ??
+    "Rate limit for this action has been reached. Please try again later.";
+
+  warningEmbed.setTitle("**Action in Cooldown**").setDescription(description);
 
   if (interaction.deferred || interaction.replied) {
     await interaction.editReply({
@@ -517,6 +527,21 @@ async function handleRateLimitError(interaction) {
       embeds: [warningEmbed],
     });
   }
+}
+
+async function handleRateLimitErrorMessage(message) {
+  warningEmbed
+    .setTitle("**Action in Cooldown**")
+    .setDescription(
+      "Rate limit for this action has been reached. Please try again later."
+    );
+
+  const msg = await message.edit({
+    content: "",
+    embeds: [warningEmbed],
+  });
+
+  return msg;
 }
 
 async function handleUnavailableError(interaction) {
@@ -689,6 +714,36 @@ function handlePlayerSkipError(track) {
   return warningEmbed;
 }
 
+async function handleTableOpen(interaction) {
+  warningEmbed
+    .setTitle("**Another Table is open**")
+    .setDescription("You already have a blackjack table open.");
+
+  if (interaction.deferred || interaction.replied) {
+    await interaction.editReply({
+      embeds: [warningEmbed],
+    });
+  } else {
+    await interaction.reply({
+      embeds: [warningEmbed],
+    });
+  }
+}
+
+async function handleMoveError(interaction) {
+  warningEmbed.setDescription("The track is already at that position.");
+
+  if (interaction.deferred || interaction.replied) {
+    await interaction.editReply({
+      embeds: [warningEmbed],
+    });
+  } else {
+    await interaction.reply({
+      embeds: [warningEmbed],
+    });
+  }
+}
+
 module.exports = {
   handleDatabaseError,
   handleStreamModeError,
@@ -721,6 +776,7 @@ module.exports = {
   handleLargeFileError,
   handleTooLongTrackError,
   handleRateLimitError,
+  handleRateLimitErrorMessage,
   handleUnavailableError,
   handleNoBookmarkProfileError,
   handleLiveTrackError,
@@ -731,4 +787,6 @@ module.exports = {
   handleMusicErrorMessage,
   handlePlayerError,
   handlePlayerSkipError,
+  handleTableOpen,
+  handleMoveError,
 };

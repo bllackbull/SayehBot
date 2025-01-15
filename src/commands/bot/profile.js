@@ -10,11 +10,11 @@ const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("profile")
-    .setDescription(`${utils.tags.mod} Customize the bot's avatar or banner`)
+    .setDescription(`${utils.tags.mod} Customize the bot's avatar or banner.`)
     .addStringOption((option) =>
       option
         .setName("type")
-        .setDescription("Select wheter to update avatar or banner")
+        .setDescription("Select wheter to update avatar or banner.")
         .setRequired(true)
         .addChoices(
           {
@@ -30,7 +30,7 @@ module.exports = {
     .addAttachmentOption((option) =>
       option
         .setName("file")
-        .setDescription(`Upload the image file (${utils.formatsLabel})`)
+        .setDescription(`Upload the image file. (${utils.formatsLabel})`)
         .setRequired(true)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)

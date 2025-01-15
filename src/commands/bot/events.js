@@ -13,11 +13,11 @@ const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("events")
-    .setDescription(`${utils.tags.mod} Manage available events`)
+    .setDescription(`${utils.tags.mod} Manage available events.`)
     .addStringOption((option) =>
       option
         .setName("type")
-        .setDescription("Select the event you want to manage")
+        .setDescription("Select the event you want to manage.")
         .setRequired(true)
         .addChoices(
           {
@@ -53,6 +53,10 @@ module.exports = {
             value: "moderation",
           },
           {
+            name: utils.events.player,
+            value: "player",
+          },
+          {
             name: "All",
             value: "all",
           }
@@ -61,7 +65,7 @@ module.exports = {
     .addStringOption((option) =>
       option
         .setName("action")
-        .setDescription("Select an action to perform")
+        .setDescription("Select an action to perform.")
         .setRequired(true)
         .addChoices(
           {
@@ -118,6 +122,9 @@ module.exports = {
         case "moderation":
           update = { Moderation: enable };
           break;
+        case "player":
+          update = { PlayerStart: enable };
+          break;
         case "all":
           update = {
             MemberAdd: enable,
@@ -128,6 +135,7 @@ module.exports = {
             Video: enable,
             Level: enable,
             Moderation: enable,
+            PlayerStart: enable,
           };
           break;
 

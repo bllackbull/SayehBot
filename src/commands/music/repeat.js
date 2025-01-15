@@ -9,11 +9,11 @@ const repeatModes = ["None", "Repeat track", "Repeat queue", "Autoplay"];
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("repeat")
-    .setDescription("Toggle repeat mode of the current queue")
+    .setDescription("Toggle repeat mode of the current queue.")
     .addStringOption((option) =>
       option
         .setName("mode")
-        .setDescription("Select the repeat mode")
+        .setDescription("Select the repeat mode to apply.")
         .setRequired(true)
         .addChoices(
           {

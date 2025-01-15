@@ -7,7 +7,7 @@ const deletionHandler = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("queue")
-    .setDescription("Get info about the current queue")
+    .setDescription("Get info about the current queue.")
     .setDMPermission(false),
 
   async execute(interaction, client) {
@@ -48,18 +48,22 @@ module.exports = {
 
         collector.on("collect", async (reaction, user) => {
           if (user.bot) return;
+          const { users, emoji } = reaction;
 
-          await reaction.users.remove(user.id);
+          await users.remove(user.id);
 
           if (!queue || !queue.currentTrack) return;
 
-          if (reaction.emoji.name == "➡" && page < totalPages - 1) {
+          if (emoji.name.includes("next") && page < totalPages - 1) {
             page++;
-          } else if (reaction.emoji.name == "⬅" && page !== 0) {
+          } else if (emoji.name.includes("previous") && page !== 0) {
             --page;
-          } else if (reaction.emoji.name == "🔀" && queue?.tracks.size !== 0) {
+          } else if (
+            emoji.name.includes("shuffle") &&
+            queue?.tracks.size !== 0
+          ) {
             await queue.tracks.shuffle();
-          } else if (reaction.emoji.name == "🔁") {
+          } else if (emoji.name.includes("repeat")) {
             const toggleNumber =
               queue.repeatMode == 3 ? 0 : queue.repeatMode + 1;
 

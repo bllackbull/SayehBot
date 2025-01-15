@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, PermissionsBitField } = require("discord.js");
+const { QueryType } = require("discord-player");
 const errorHandler = require("../../utils/main/handleErrors");
 const { response } = require("../../utils/player/createResponse");
 const { handleData } = require("../../utils/player/handlePlayerData");
@@ -11,15 +12,24 @@ const deletionHandler = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("play")
-    .setDescription(
-      "Play a track (YouTube / Spotify / Soundcloud / Apple Music)"
-    )
+    .setDescription("Play a track.")
     .addStringOption((option) =>
       option
         .setName("query")
         .setDescription("Input track / playlist name or url.")
         .setRequired(true)
         .setAutocomplete(true)
+    )
+    .addStringOption((option) =>
+      option
+        .setName("source")
+        .setDescription("Select a source to search in.")
+        .addChoices(
+          { name: "YouTube", value: QueryType.YOUTUBE },
+          { name: "Spotify", value: QueryType.SPOTIFY_SEARCH },
+          { name: "SoundCloud", value: QueryType.SOUNDCLOUD },
+          { name: "Apple Music", value: QueryType.APPLE_MUSIC_SEARCH }
+        )
     )
     .setDMPermission(false),
 
@@ -28,7 +38,10 @@ module.exports = {
     const query = interaction.options.getString("query", true);
     if (!query) return;
 
-    const engine = query.startsWith("https") ? "auto" : "youtube";
+    const source = interaction.options.get("source");
+    const sourceValue = source ? source.value : QueryType.YOUTUBE;
+
+    const engine = query.startsWith("https") ? "auto" : sourceValue;
     const result = await search(query, engine);
     if (!result.hasTracks()) return;
 
@@ -55,7 +68,11 @@ module.exports = {
       errorHandler.handleVoiceChannelError(interaction);
     } else {
       const query = interaction.options.getString("query", true);
-      const engine = query.startsWith("https") ? "auto" : "youtube";
+
+      const source = interaction.options.get("source");
+      const sourceValue = source ? source.value : QueryType.YOUTUBE;
+
+      const engine = query.startsWith("https") ? "auto" : sourceValue;
       const result = await search(query, engine);
 
       if (!result.hasTracks()) {

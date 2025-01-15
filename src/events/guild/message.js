@@ -61,6 +61,18 @@ module.exports = {
         )
           return;
 
+        if (
+          channel.id === process.env.clipChannelID &&
+          url.startsWith("https://www.twitch.tv/sayeh")
+        )
+          return;
+
+        if (
+          channel.id === process.env.selfpromoChannelID &&
+          (url.includes("youtube") || url.includes("youtu.be"))
+        )
+          return;
+
         if (url.includes("discord.gg")) {
           ban = true;
           reason = `Usage of a discord url: ${url}`;
@@ -81,6 +93,9 @@ module.exports = {
 
       ban = true;
       reason = "Unauthorized use of @everyone.";
+    } else if (channel.id === process.env.selfpromoChannelID) {
+      ban = true;
+      reason = "Sending text in a URL-only channel";
     }
 
     const eventsList = await eventsModel.findOne({

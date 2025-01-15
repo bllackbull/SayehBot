@@ -7,7 +7,7 @@ const deletionHandler = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("leave")
-    .setDescription(`${tags.mod} Disconnect the bot`)
+    .setDescription(`${tags.mod} Disconnect the bot.`)
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .setDMPermission(false),
 

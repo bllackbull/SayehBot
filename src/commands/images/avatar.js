@@ -1,12 +1,12 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { texts, colors, footers } = require("../../utils/main/mainUtils");
+const { texts, colors, footers, tags } = require("../../utils/main/mainUtils");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("avatar")
-    .setDescription("Get a user avatar")
+    .setDescription(`${tags.images} Get a user avatar picture.`)
     .addUserOption((option) =>
-      option.setName("user").setDescription("Pick a member").setRequired(false)
+      option.setName("user").setDescription("Pick a member.").setRequired(false)
     ),
 
   async execute(interaction) {
