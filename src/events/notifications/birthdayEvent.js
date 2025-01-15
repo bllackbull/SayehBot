@@ -5,7 +5,7 @@ const { consoleTags } = require("../../utils/main/mainUtils");
 module.exports = {
   name: "birthday",
 
-  async execute(user, guildId, age) {
+  async execute(user, guildId, age, client) {
     const guild = await client.guilds.fetch(guildId);
     if (!guild) return;
 

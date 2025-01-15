@@ -28,7 +28,7 @@ module.exports = {
         .setName("target")
         .setDescription("Input a custom PM2 process name.")
     )
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .setDMPermission(false),
 
   async execute(interaction) {

@@ -39,11 +39,17 @@ module.exports = {
         })
         .join("\n");
 
+      const subs = Number(channelData.statistics.subscriberCount);
+      const views = Number(channelData.statistics.viewCount);
+
       const title = channelData.brandingSettings.channel.title;
       const url = `https://youtube.com/channel/${channelData.id}`;
-      const subCount = `**${channelData.statistics.subscriberCount.toLocaleString()}** subscribers`;
-      const viewCount = `**${channelData.statistics.viewCount}** views`;
+      const subCount = `**${subs.toLocaleString()}** subscribers`;
+      const viewCount = `**${views.toLocaleString()}** views`;
       const videoCount = `**${channelData.statistics.videoCount}** videos`;
+      const avatar = channelData.snippet.thumbnails?.high?.url || undefined;
+      const banner =
+        channelData.brandingSettings.image?.bannerExternalUrl || undefined;
       const channelDescription =
         channelData.brandingSettings.channel.description || "";
 
@@ -54,8 +60,8 @@ module.exports = {
           `${subCount}\n${viewCount}\n${videoCount}\n\n${channelDescription}\n\n### Latest Videos :\n${videoList}\n\n **Channel Id :** ${channelId}`
         )
         .setColor(utils.colors.youtube)
-        .setThumbnail(channelData.snippet.thumbnails.high.url)
-        .setImage(channelData.brandingSettings.image.bannerExternalUrl)
+        .setThumbnail(avatar)
+        .setImage(banner)
         .setFooter({
           text: utils.texts.youtube,
           iconURL: utils.footers.youtube,

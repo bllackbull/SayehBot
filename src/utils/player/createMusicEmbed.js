@@ -1,5 +1,12 @@
 const { EmbedBuilder } = require("discord.js");
-const { titles, footers, texts, thumbnails, colors } = require("./musicUtils");
+const {
+  titles,
+  footers,
+  texts,
+  thumbnails,
+  buttons,
+  colors,
+} = require("./musicUtils");
 const { parseTime } = require("../main/handleDeletion");
 
 function createEmbed({ title, description, color, author, thumbnail, footer }) {
@@ -135,7 +142,7 @@ function createTrackEmbed(interaction, queue, result, song) {
     }
   } else if (customId) {
     author = {
-      name: user.globalName || user.username,
+      name: user.displayName || user.username,
       iconURL: user.displayAvatarURL({ size: 1024, dynamic: true }),
     };
 
@@ -245,7 +252,7 @@ async function createPauseEmbed(interaction, queue) {
 
   const author = interaction.customId
     ? {
-        name: user.globalName || user.username,
+        name: user.displayName || user.username,
         iconURL: user.displayAvatarURL({
           size: 1024,
           dynamic: true,
@@ -307,12 +314,14 @@ function createQueueEmbed(page, totalPages, queue) {
   const repeatModes = ["None", "Repeat track", "Repeat queue", "Autoplay"];
   const repeatDescription =
     queue.repeatMode > 0
-      ? `**🔁 ${repeatModes[queue.repeatMode]}** mode is enabled.\n`
+      ? `**${buttons.repeat} ${
+          repeatModes[queue.repeatMode]
+        }** mode is enabled.\n`
       : "";
 
   const filtersDescription =
     queue.filters.ffmpeg.filters.length > 0
-      ? `**✨ ${queue.filters.ffmpeg.filters.length} filters are enabled :** ${queue.filters.ffmpeg.filters}\n`
+      ? `**${buttons.filter} ${queue.filters.ffmpeg.filters.length} filters are enabled :** ${queue.filters.ffmpeg.filters}\n`
       : "";
 
   const description =
@@ -355,11 +364,11 @@ function createVoteEmbed(requiredVotes, phase) {
       thumbnail = thumbnails.voteskip;
       break;
     case "success":
-      description = `Required votes have been collected. Skipping...`;
+      description = "Required votes have been collected. Skipping...";
       thumbnail = thumbnails.successvote;
       break;
     case "fail":
-      description = `Voting phase ended. Not enough votes were collected.`;
+      description = "Voting phase ended. Not enough votes were collected.";
       thumbnail = thumbnails.failvote;
       break;
   }
@@ -381,7 +390,7 @@ function createVoteEmbed(requiredVotes, phase) {
 }
 
 function createFavoriteEmbed(owner, song, favoriteMode, favoriteLength) {
-  const user = owner.globalName || owner.username;
+  const user = owner.displayName || owner.username;
   const name = `${user}'s Favorites (${favoriteLength} Tracks)`;
   const avatar = owner.displayAvatarURL({ size: 1024, dynamic: true });
 
@@ -428,7 +437,7 @@ function createFavoriteEmbed(owner, song, favoriteMode, favoriteLength) {
 }
 
 function createPlayFavoriteEmbed(owner, queue, song, target, length) {
-  const user = owner.globalName || owner.username;
+  const user = owner.displayName || owner.username;
   const name = target
     ? `${user}'s Favorites (Track #${target})`
     : `${user}'s Favorites (${length} Tracks)`;
@@ -484,7 +493,7 @@ function createPlayFavoriteEmbed(owner, queue, song, target, length) {
 }
 
 function createViewFavoriteEmbed(owner, object, target, page, totalPages) {
-  const user = owner.globalName || owner.username;
+  const user = owner.displayName || owner.username;
   const name = target
     ? `${user}'s Favorites (Track #${target})`
     : `${user}'s Favorites (${object.length} Tracks)`;
@@ -530,7 +539,7 @@ function createViewFavoriteEmbed(owner, object, target, page, totalPages) {
 }
 
 function createDeleteWarningFavoriteEmbed(owner, song, target) {
-  const user = owner.globalName || owner.username;
+  const user = owner.displayName || owner.username;
   const name = target
     ? `${user}'s Favorites (Track #${target})`
     : `${user}'s Favorites`;
@@ -632,7 +641,9 @@ function createLeaveEmbed() {
 
 function createRemoveEmbed(target) {
   const title = titles.removefavorite;
-  const description = `**Track ${target}** has been removed from the queue.`;
+  const description = `**Track ${
+    target + 1
+  }** has been removed from the queue.`;
   const thumbnail = thumbnails.successvote;
   const { color } = determineSource("music");
 

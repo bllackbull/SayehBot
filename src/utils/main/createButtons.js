@@ -93,12 +93,10 @@ function createWarningButtons() {
 }
 
 function createUrlButton(label, url) {
-  const urlButton = new ButtonBuilder()
+  return new ButtonBuilder()
     .setLabel(label)
     .setURL(url)
     .setStyle(ButtonStyle.Link);
-
-  return { urlButton };
 }
 
 function createGameButtons(customId, recentRunUrl, bestRunUrl) {

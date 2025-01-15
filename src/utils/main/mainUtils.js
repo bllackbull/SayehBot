@@ -1,3 +1,22 @@
+const emojis = {
+  sayehai: "<:sayehai:1327276070445256886>",
+  bookmark: "<:bookmark:1271846805306605599>",
+  bin: "<:bin:1328809241816862750>",
+  next: "<:nextpage:1329040805679075369>",
+  previous: "<:previouspage:1329042943058645053>",
+  help: "<:help:1329056395554848788>",
+  icon: "<:webicon:1329057518722355252>",
+  user: "<:user:1329059359417958501>",
+  qr: "<:qr:1329059947849187378>",
+  command: "<:command:1329061892932632606>",
+  message: "<:message:1329063406224805938>",
+  cursor: "<:cursor:1329064273972035625>",
+  spades: "<:spades:1329100609013420074>",
+  hearts: "<:hearts:1329100557142458450>",
+  diamonds: "<:diamonds:1329100522199978096>",
+  clubs: "<:clubs:1329100462435078295>",
+};
+
 const titles = {
   clear: "**🚮 Clear**",
   delete: "**🚮 Delete**",
@@ -141,7 +160,7 @@ const thumbnails = {
   roll: "https://i.imgur.com/851YpFE.png",
   casino: "https://i.imgur.com/NabJ4ov.png",
   bookmark: "https://i.imgur.com/FjwLaip.png",
-  twitch_sayeh: "https://i.imgur.com/7aO5p95.png",
+  twitch_sayeh: "https://i.imgur.com/yaE4zRe.png",
   twitch_hamid: "https://i.imgur.com/VdPzgLm.png",
   twitch_offline_sayeh: "https://i.imgur.com/6BsizDi.jpg",
   twitch_offline_hamid: "https://i.imgur.com/nmKK3BU.jpg",
@@ -169,21 +188,6 @@ const urls = {
   telegram: "https://t.me/sayeh_game",
   instagram: "https://www.instagram.com/sayeh_game",
   website: "https://sayehgame.com",
-};
-
-const emojis = {
-  sayehai: "<:sayehai:1327276070445256886>",
-  bookmark: "<:bookmark:1271846805306605599>",
-  bin: "<:bin:1328809241816862750>",
-  next: "<:nextpage:1329040805679075369>",
-  previous: "<:previouspage:1329042943058645053>",
-  help: "<:help:1329056395554848788>",
-  icon: "<:webicon:1329057518722355252>",
-  user: "<:user:1329059359417958501>",
-  qr: "<:qr:1329059947849187378>",
-  command: "<:command:1329061892932632606>",
-  message: "<:message:1329063406224805938>",
-  cursor: "<:cursor:1329064273972035625>",
 };
 
 const warnPenalties = [

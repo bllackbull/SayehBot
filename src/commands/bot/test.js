@@ -69,7 +69,7 @@ module.exports = {
 
       await client.emit(event, user);
     } else if (event === "birthday") {
-      const user = interaction.user.globalName || interaction.user.username;
+      const user = interaction.user.displayName || interaction.user.username;
       const guildId = interaction.guild.id;
       const age = 0;
 

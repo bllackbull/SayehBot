@@ -18,7 +18,6 @@ module.exports = {
       .setDescription("Follow Sayeh on social media!")
       .addFields(
         { name: utils.texts.twitch, value: "Sayeh", inline: true },
-        { name: utils.texts.kick, value: "Sayeh", inline: true },
         {
           name: `${utils.texts.youtube} (Main)`,
           value: "@Say3h",

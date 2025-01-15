@@ -50,7 +50,7 @@ OR install manually :
 
 - `npm i ffmpeg-static libsodium-wrappers@0.7.10 discord-player`
 
-- `npm i @distube/ytdl-core`
+- `npm i @distube/ytdl-core@4.15.6`
 
 ## 10. Install Fonts
 Bubblegum installation :

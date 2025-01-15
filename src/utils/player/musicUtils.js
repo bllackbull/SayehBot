@@ -1,3 +1,20 @@
+const buttons = {
+  view: "<:view:1328810076621897762>",
+  add: "<:add:1328808683236229141>",
+  remove: "<:remove:1328809820727414857>",
+  filter: "<:effect:1328806838484992010>",
+  repeat: "<:repeat:1328806089210462290>",
+  move: "<:move:1328805669952028784>",
+  playlist: "<:playlist:1271847051344347198>",
+  search: "<:search:1328794516576141314>",
+  play: "<:play:1328793704458358785>",
+  previous: "<:previous:1328795136825753642>",
+  pause: "<:pause:1328792081392599191>",
+  skip: "<:skip:1328793165397753857>",
+  shuffle: "<:shuffle:1328796760763535420>",
+  favorite: "🤍",
+};
+
 const titles = {
   nowplaying: "**🎵 Now Playing**",
   track: "🎵 Track",
@@ -32,24 +49,6 @@ const colors = {
   soundcloud: "#ff5500",
   applemusic: "#f94c57",
   music: "#256fc4",
-};
-
-const buttons = {
-  bookmark: "🔖",
-  view: "<:view:1328810076621897762>",
-  add: "<:add:1328808683236229141>",
-  remove: "<:remove:1328809820727414857>",
-  filter: "<:effect:1328806838484992010>",
-  repeat: "<:repeat:1328806089210462290>",
-  move: "<:move:1328805669952028784>",
-  playlist: "<:playlist:1271847051344347198>",
-  search: "<:search:1328794516576141314>",
-  play: "<:play:1328793704458358785>",
-  previous: "<:previous:1328795136825753642>",
-  pause: "<:pause:1328792081392599191>",
-  skip: "<:skip:1328793165397753857>",
-  shuffle: "<:shuffle:1328796760763535420>",
-  favorite: "🤍",
 };
 
 const footers = {

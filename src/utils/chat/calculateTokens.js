@@ -15,8 +15,6 @@ async function checkDate(chatProfile) {
         LastUpdated: date,
       }
     );
-
-    return limitReached;
   }
 }
 

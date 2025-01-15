@@ -4,6 +4,6 @@ module.exports = {
   name: "error",
 
   async execute(error) {
-    console.log(`${consoleTags.ws} error:`, error.message);
+    console.error(`${consoleTags.ws} error:`, error.message);
   },
 };

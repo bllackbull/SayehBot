@@ -18,7 +18,7 @@ module.exports = {
     if (message.guild) return;
     if (mongoose.connection.readyState !== 1) return;
 
-    const msg = await message.channel.send("SayehBot Beta is thinking...");
+    const msg = await message.channel.send("SayehBot is thinking...");
 
     const source = "dm";
     const userId = message.author.id;
@@ -78,6 +78,11 @@ module.exports = {
           role: "assistant",
           content: answer,
         });
+
+        await chatModel.findOneAndUpdate(
+          { UserId: userId },
+          { Messages: chat }
+        );
 
         const embed = createEmbed(answer);
 

@@ -18,7 +18,8 @@ module.exports = {
         .setName("prompt")
         .setDescription("Input a prompt to ask.")
         .setRequired(true)
-    ),
+    )
+    .setDMPermission(false),
 
   async execute(interaction) {
     let success = false;
@@ -94,6 +95,11 @@ module.exports = {
             role: "assistant",
             content: answer,
           });
+
+          await chatModel.findOneAndUpdate(
+            { UserId: userId },
+            { Messages: chat }
+          );
 
           const embed = createEmbed(answer);
 

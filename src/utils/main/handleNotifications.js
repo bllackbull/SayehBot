@@ -127,7 +127,7 @@ async function startStream(client, data) {
 
   const announcement = `Hey ${utils.tag}\n**${username}** is now LIVE on Twitch! 😍🔔\n\n## ${title}\n\n${url}`;
 
-  const { urlButton } = createUrlButton(utils.labels.stream, url);
+  const urlButton = createUrlButton(utils.labels.stream, url);
   const button = new ActionRowBuilder().addComponents(urlButton);
 
   if (notifiedChannels.has(user_login)) return;
@@ -330,7 +330,7 @@ async function newVideo(client, data) {
 
   const announcement = `Hey ${utils.tag}\n**${data.username}** just published a new video! 😍🔔\n\n## ${title}\n\n${url}`;
 
-  const { urlButton } = createUrlButton(utils.labels.video, url);
+  const urlButton = createUrlButton(utils.labels.video, url);
   const button = new ActionRowBuilder().addComponents(urlButton);
 
   const msg = await channel.send({

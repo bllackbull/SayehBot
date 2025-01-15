@@ -56,7 +56,7 @@ module.exports = {
         success = true;
 
         if (allowed) {
-          await remove(interaction, queue, target);
+          await remove(interaction, queue, target - 1);
         } else {
           ////////////// vote phase //////////////
           let embed = createVoteEmbed(requiredVotes, "start");
@@ -66,7 +66,7 @@ module.exports = {
           });
 
           let votes = 0;
-          let remove = false;
+          let action = false;
           const timer = requiredVotes * 10 * 1000;
 
           const collector = voteReact(interaction, removeEmbed, timer);
@@ -74,11 +74,11 @@ module.exports = {
           collector.on("collect", async (user) => {
             if (user.bot) return;
 
-            if (!remove) {
+            if (!action) {
               votes++;
 
               if (votes >= requiredVotes) {
-                remove = true;
+                action = true;
                 collector.stop();
 
                 embed = createVoteEmbed(requiredVotes, "success");
@@ -87,13 +87,13 @@ module.exports = {
                   embeds: [embed],
                 });
 
-                await remove(interaction, queue, target);
+                await remove(interaction, queue, target - 1);
               }
             }
           });
 
           collector.on("end", async () => {
-            if (!remove) {
+            if (!action) {
               embed = createVoteEmbed(requiredVotes, "fail");
 
               await interaction.editReply({
