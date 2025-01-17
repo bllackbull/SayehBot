@@ -358,10 +358,18 @@ async function newVideo(data) {
   }, 600_000);
 }
 
+async function notifDeveloper(message) {
+  const developer = await client.users.fetch(process.env.developerID);
+  if (!developer) return;
+
+  await developer.send(message);
+}
+
 module.exports = {
   getNotifClient,
   startStream,
   updateStream,
   endStream,
   newVideo,
+  notifDeveloper,
 };

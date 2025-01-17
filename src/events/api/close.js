@@ -1,16 +1,14 @@
 const { consoleTags } = require("../../utils/main/mainUtils");
+const { notifDeveloper } = require("../../utils/main/handleNotifications");
 
 module.exports = {
   name: "close",
 
-  async execute(client) {
-    console.error(`${consoleTags.ws} Disconnected from WebSocket server.`);
+  async execute() {
+    const message = `${consoleTags.ws} Disconnected from WebSocket server.`;
 
-    const developer = await client.users.fetch(process.env.developerID);
-    if (!developer) return;
+    console.error(message);
 
-    await developer.send(
-      `${consoleTags.ws} Disconnected from WebSocket server.`
-    );
+    await notifDeveloper(message);
   },
 };
