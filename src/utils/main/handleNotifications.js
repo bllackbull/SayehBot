@@ -11,6 +11,11 @@ const { consoleTags } = require("./mainUtils");
 
 const notifiedChannels = new Set();
 
+let client;
+function getNotifClient(importedClient) {
+  client = importedClient;
+}
+
 const STREAMERS = {
   sayeh: {
     streamData: false,
@@ -50,7 +55,7 @@ function createItems(username) {
   return { image, url };
 }
 
-async function startStream(client, data) {
+async function startStream(data) {
   if (mongoose.connection.readyState !== 1) return;
 
   const guild = await client.guilds.fetch(process.env.guildID);
@@ -155,7 +160,7 @@ async function startStream(client, data) {
   }, 600_000);
 }
 
-async function updateStream(client, data) {
+async function updateStream(data) {
   if (mongoose.connection.readyState !== 1) return;
 
   const guild = await client.guilds.fetch(process.env.guildID);
@@ -204,7 +209,7 @@ async function updateStream(client, data) {
   updateStreamerData(user_login, data, embed, announcement, msg);
 }
 
-async function endStream(client, data) {
+async function endStream(data) {
   if (mongoose.connection.readyState !== 1) return;
 
   const guild = await client.guilds.fetch(process.env.guildID);
@@ -249,7 +254,7 @@ async function endStream(client, data) {
   resetStreamerData(user_login);
 }
 
-async function newVideo(client, data) {
+async function newVideo(data) {
   if (mongoose.connection.readyState !== 1) return;
 
   const guild = await client.guilds.fetch(process.env.guildID);
@@ -354,6 +359,7 @@ async function newVideo(client, data) {
 }
 
 module.exports = {
+  getNotifClient,
   startStream,
   updateStream,
   endStream,

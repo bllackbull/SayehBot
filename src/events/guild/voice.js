@@ -18,7 +18,7 @@ module.exports = {
       if (voiceChannelEntryIntervals.get(member.user.id)) return;
 
       const intervalId = setInterval(async () => {
-        if (member.presence.status !== "online") return;
+        if (member.presence?.status !== "online") return;
         if (member.voice.deaf || member.voice.selfDeaf) return;
 
         const levelProfile = await getUser(guild.id, member.user);
