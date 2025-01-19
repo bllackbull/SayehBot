@@ -135,9 +135,6 @@ async function startStream(data) {
   const urlButton = createUrlButton(utils.labels.stream, url);
   const button = new ActionRowBuilder().addComponents(urlButton);
 
-  if (notifiedChannels.has(user_login)) return;
-  notifiedChannels.add(user_login);
-
   console.log(`${consoleTags.app} ${username}'s twitch notification sent.`);
 
   const msg = await channel.send({
@@ -154,10 +151,6 @@ async function startStream(data) {
       components: [button],
     });
   }, 2_000);
-
-  setTimeout(() => {
-    notifiedChannels.delete(user_login);
-  }, 600_000);
 }
 
 async function updateStream(data) {
