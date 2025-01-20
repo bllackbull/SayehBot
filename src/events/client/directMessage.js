@@ -91,7 +91,7 @@ module.exports = {
           embeds: [embed],
         });
 
-        await tokenHandler.updateTotalTokens(userId, prompt);
+        await tokenHandler.updateTotalTokens(userId, prompt, answer);
       } catch (error) {
         console.log(
           `${utils.consoleTags.error} While awaiting response from SayehAI: `,

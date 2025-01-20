@@ -36,6 +36,7 @@ function updateInfo(environment, source) {
       "and the sayehgame.com website is developed by Pouya Khalili and Alireza Mansoori (@alireza_97 in discord) ." +
       "Try to inform users that you can make mistakes and you are not perfect but they can ask about anything they want." +
       "Also, remember that you response cannot be more than 2048 characters. Do not response with more than 2000 characters." +
+      "Do not answer in persian or arabic language in anyway. If a user asked a question in these languages, answer them in english." +
       envData,
   };
 }

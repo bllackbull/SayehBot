@@ -18,16 +18,17 @@ async function checkDate(chatProfile) {
   }
 }
 
-async function updateTotalTokens(userId, prompt) {
+async function updateTotalTokens(userId, prompt, response) {
   const chatProfile = await chatModel.findOne({
     UserId: userId,
   });
 
   if (!chatProfile) return;
 
-  const tokens = encode(prompt).length;
+  const promptTokens = encode(prompt).length;
+  const responseTokens = encode(response).length;
 
-  let newTotalTokens = chatProfile.TokensUsed + tokens;
+  let newTotalTokens = chatProfile.TokensUsed + promptTokens + responseTokens;
 
   if (newTotalTokens > TOKEN_LIMIT) {
     newTotalTokens = TOKEN_LIMIT;

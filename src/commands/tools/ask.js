@@ -107,7 +107,7 @@ module.exports = {
             embeds: [embed],
           });
 
-          await tokenHandler.updateTotalTokens(userId, prompt);
+          await tokenHandler.updateTotalTokens(userId, prompt, answer);
 
           success = true;
         } catch (error) {
