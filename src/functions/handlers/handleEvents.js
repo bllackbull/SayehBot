@@ -2,12 +2,12 @@ const fs = require("fs");
 const { connection } = require("mongoose");
 const { useMainPlayer } = require("discord-player");
 const executing = require("node:process");
-const WebSocket = require("ws");
+const { connectWebSocket } = require("../../utils/api/connectWebSocket");
 
 module.exports = (client) => {
   client.handleEvents = async () => {
     const eventFolders = fs.readdirSync(`./src/events`);
-    const ws = new WebSocket("wss://api.sayehgame.com/ws");
+    const ws = connectWebSocket();
 
     for (const folder of eventFolders) {
       const eventFiles = fs

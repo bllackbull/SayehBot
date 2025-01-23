@@ -1,7 +1,8 @@
 const { consoleTags } = require("../main/mainUtils");
-let birthdayInterval, presenceInterval, systemInterval;
+let checkApi, birthdayInterval, presenceInterval, systemInterval;
 
 function setIntervals(client) {
+  checkApi = setInterval(client.checkApi, 600_000);
   birthdayInterval = setInterval(client.remindBirthday, 600_000);
   presenceInterval = setInterval(client.updatePresence, 3_600_000);
   systemInterval = setInterval(client.checkSystem, 10_000);
@@ -10,6 +11,7 @@ function setIntervals(client) {
 }
 
 function clearIntervals() {
+  clearIntervals(checkApi);
   clearInterval(birthdayInterval);
   clearInterval(presenceInterval);
   clearInterval(systemInterval);

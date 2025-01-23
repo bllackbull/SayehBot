@@ -46,7 +46,7 @@ OR install manually :
 
 - `npm i axios canvas@2.11.2 discord-giveaways@6.0.1 moment-timezone@0.5.37 mongoose ms@2.1.3 nasa-apod@0.2.0 node-fetch@3.2.10 node-twitch@0.4.7`
 
-- `npm i rss-parser@3.12.0 node-pre-gyp node-opus opusscript@0.0.8 noderiowrapper@1.1.1 steam-market-pricing@2.0.0 oxr@1.1.4 movier@3.0.1 genius-lyrics@4.4.3 steam-searcher@1.0.4 howlongtobeat node-os-utils overwatch-api @matsukky/twitchtracker googleapis openai gpt-tokenizer`
+- `npm i rss-parser@3.12.0 node-pre-gyp node-opus opusscript@0.0.8 noderiowrapper@1.1.1 steam-market-pricing@2.0.0 oxr@1.1.4 movier@3.0.1 genius-lyrics@4.4.3 steam-searcher@1.0.4 howlongtobeat node-os-utils overwatch-api @matsukky/twitchtracker googleapis openai gpt-tokenizer socket.io-client`
 
 - `npm i ffmpeg-static libsodium-wrappers@0.7.10 discord-player`
 
