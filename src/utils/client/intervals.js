@@ -11,7 +11,7 @@ function setIntervals(client) {
 }
 
 function clearIntervals() {
-  clearIntervals(checkApi);
+  clearInterval(checkApi);
   clearInterval(birthdayInterval);
   clearInterval(presenceInterval);
   clearInterval(systemInterval);
