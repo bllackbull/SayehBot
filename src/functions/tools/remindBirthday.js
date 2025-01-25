@@ -55,7 +55,7 @@ module.exports = (client) => {
         await birthdayModel.updateOne({ User: user }, { Age: `${age}` });
 
         setTimeout(async () => {
-          await client.emit("birthday", birthdayProfile.Username, birthdayProfile.GuildId, age);
+          await client.emit("birthday", birthdayProfile.User, birthdayProfile.GuildId, age);
         }, 1000);
       }
     }

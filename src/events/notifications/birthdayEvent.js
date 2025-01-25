@@ -5,7 +5,7 @@ const { consoleTags } = require("../../utils/main/mainUtils");
 module.exports = {
   name: "birthday",
 
-  async execute(user, guildId, age, client) {
+  async execute(id, guildId, age, client) {
     const guild = await client.guilds.fetch(guildId);
     if (!guild) return;
 
@@ -26,12 +26,10 @@ module.exports = {
     const channel = await guild.channels.fetch(channelId);
     if (!channel) return;
 
-    const content = `🎈 🎂 Today is **<@${user}>**'s birthday! (Age **${age}**) Happy birthday! 🥳 🎉`;
+    const content = `🎈 🎂 Today is **<@${id}>**'s birthday! (Age **${age}**) Happy birthday! 🥳 🎉`;
 
     await channel.send(content);
 
-    console.log(
-      `${consoleTags.app} Today is ${user}'s birthday! (Age ${age}).`
-    );
+    console.log(`${consoleTags.app} Today is ${id}'s birthday! (Age ${age}).`);
   },
 };
