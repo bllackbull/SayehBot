@@ -235,7 +235,12 @@ const bannedWords = [
 const formats = ["image/png", "image/gif", "image/jpeg"];
 const formatsLabel = ".png, .gif, .jpeg, .jpg";
 
-const modes = { enabled: "Enabled ✅", disabled: "Disabled ❌" };
+const modes = {
+  enabled: "Enabled ✅",
+  disabled: "Disabled ❌",
+  connected: "Connected ✅",
+  disconnected: "Disconnected ❌",
+};
 
 const tags = {
   new: "[New]",

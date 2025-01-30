@@ -8,6 +8,7 @@ const { handleDatabaseError } = require("../../utils/main/handleErrors");
 const utils = require("../../utils/main/mainUtils");
 const eventsModel = require("../../database/eventsModel");
 const channelModel = require("../../database/channelModel");
+const wsModel = require("../../database/wsModel");
 const { getSystemUsage } = require("../../utils/client/handleSystemUsage");
 const { version, dependencies } = require("../../../package.json");
 const { pageReact } = require("../../utils/main/handleReaction");
@@ -29,6 +30,9 @@ module.exports = {
       const infoEmbed = await interaction.deferReply({
         fetchReply: true,
       });
+
+      const wsProfile = await wsModel.findOne();
+      const wsConnection = wsProfile ? wsProfile.Connection : false;
 
       const discordJsVersion = dependencies["discord.js"].replace("^", "");
       const playerVersion = dependencies["discord-player"].replace("^", "");
@@ -97,8 +101,14 @@ module.exports = {
         }
       }
 
+      const { enabled, disabled, connected, disconnected } = utils.modes;
+
       const uptime = `### Uptime:
                       \n${uptimeString}`;
+
+      const wsStatus = `### WebSocket Connection Status:\n${
+        wsConnection ? connected : disconnected
+      }`;
 
       const versions = `### Versions:
                       > SayehBot: \`${version}\`
@@ -106,7 +116,6 @@ module.exports = {
                       > discord.js: \`${discordJsVersion}\`
                       > discord-player: \`${playerVersion}\``;
 
-      const { enabled, disabled } = utils.modes;
       const eventsDescription = `### Events:
                               \nSee which features of the bot are enabled:\n
                               > **${utils.events.welcome}** : ${
@@ -165,7 +174,7 @@ module.exports = {
       }`;
 
       const pages = [
-        `${uptime}\n${usageDescription}\n${versions}`,
+        `${uptime}\n${usageDescription}\n${wsStatus}\n${versions}`,
         `${eventsDescription}\n${channelsDescription}`,
       ];
 
