@@ -7,7 +7,7 @@ const { connectWebSocket } = require("../../utils/api/connectWebSocket");
 module.exports = (client) => {
   client.handleEvents = async () => {
     const eventFolders = fs.readdirSync(`./src/events`);
-    const ws = connectWebSocket();
+    let ws = connectWebSocket();
 
     for (const folder of eventFolders) {
       const eventFiles = fs
@@ -76,6 +76,8 @@ module.exports = (client) => {
         case "api":
           for (const file of eventFiles) {
             const event = require(`../../events/${folder}/${file}`);
+
+            if (event.name === "close") ws = connectWebSocket();
 
             ws.on(event.name, (...args) => {
               event.execute(...args, client);

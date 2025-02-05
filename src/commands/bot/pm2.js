@@ -10,9 +10,7 @@ const utils = require("../../utils/main/mainUtils");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("pm2")
-    .setDescription(
-      `${utils.tags.new} ${utils.tags.admin} Execute PM2 commands.`
-    )
+    .setDescription(`${utils.tags.new} ${utils.tags.mod} Execute PM2 commands.`)
     .addStringOption((option) =>
       option
         .setName("action")
@@ -28,7 +26,7 @@ module.exports = {
         .setName("target")
         .setDescription("Input a custom PM2 process name.")
     )
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .setDMPermission(false),
 
   async execute(interaction) {

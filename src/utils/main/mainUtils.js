@@ -270,7 +270,7 @@ const results = {
   tie: "𝐓𝐢𝐞!",
 };
 
-const TOKEN_LIMIT = 6_000;
+const TOKEN_LIMIT = 2_000;
 
 module.exports = {
   titles,
