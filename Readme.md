@@ -45,12 +45,8 @@ OR install manually :
 
 - In the main folder, use this command: `npm init`
 - for name, type and enter: `sayehbot`
-  <<<<<<< HEAD
 - for version, type and enter: `1.7.2`
-- # for description, type and enter: `Sayeh's official discord bot`
-- for version, type and enter: `1.7.1`
-- for description, type and enter: `Official Sayeh's discord server bot`
-  > > > > > > > main
+- for description, type and enter: `Sayeh's official discord bot`
 - for main file, type and enter: `./src/bot.js`
 - for test command, type and enter: `node .`
 - You can skip the rest by pressing enter until the file is created and done.
