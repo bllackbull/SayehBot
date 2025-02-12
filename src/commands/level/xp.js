@@ -13,13 +13,11 @@ const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("xp")
-    .setDescription(
-      `${utils.tags.updated} ${utils.tags.mod} Change XP rate of this server`
-    )
+    .setDescription(`${utils.tags.mod} Change XP rate of this server.`)
     .addIntegerOption((option) =>
       option
         .setName("rate")
-        .setDescription("Input a number to set as XP rate")
+        .setDescription("Input a number to set as XP rate.")
         .setMinValue(1)
         .setMaxValue(100)
         .setRequired(true)

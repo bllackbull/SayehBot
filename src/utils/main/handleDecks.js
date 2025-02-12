@@ -1,5 +1,7 @@
+const { hearts, diamonds, clubs, spades } = require("./mainUtils").emojis;
+
 function createDeck(numberOfDecks = 6) {
-  const suits = ["♥️", "♦️", "♣️", "♠️"];
+  const suits = [hearts, diamonds, clubs, spades];
   const values = [
     "2",
     "3",

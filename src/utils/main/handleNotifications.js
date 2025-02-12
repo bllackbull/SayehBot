@@ -1,15 +1,20 @@
 const { EmbedBuilder, ActionRowBuilder } = require("discord.js");
 const { mongoose } = require("mongoose");
 const streamModel = require("../../database/streamModel");
+const videoModel = require("../../database/videoModel");
 const eventsModel = require("../../database/eventsModel");
 const channelModel = require("../../database/channelModel");
-const { getUserProfile, createItems } = require("../api/handleStream");
 const { createUrlButton } = require("../../utils/main/createButtons");
 const presenceHandler = require("../../utils/main/handlePresence");
 const utils = require("../main/mainUtils");
 const { consoleTags } = require("./mainUtils");
 
 const notifiedChannels = new Set();
+
+let client;
+function getNotifClient(importedClient) {
+  client = importedClient;
+}
 
 const STREAMERS = {
   sayeh: {
@@ -18,7 +23,7 @@ const STREAMERS = {
     announcement: false,
     msg: false,
   },
-  hamiitz: {
+  hamidfailz: {
     streamData: false,
     embed: false,
     announcement: false,
@@ -33,12 +38,6 @@ function updateStreamerData(streamer, data, embed, announcement, msg) {
   STREAMERS[streamer].msg = msg;
 }
 
-function getLoginFromChannel(channel) {
-  if (channel === "Sayeh") return "sayeh";
-  if (channel === "Hamiitz") return "hamiitz";
-  return false;
-}
-
 function resetStreamerData(streamer) {
   STREAMERS[streamer].streamData = false;
   STREAMERS[streamer].embed = false;
@@ -46,7 +45,17 @@ function resetStreamerData(streamer) {
   STREAMERS[streamer].msg = false;
 }
 
-async function startStream(client, data) {
+function createItems(username) {
+  const name = username.toLowerCase();
+  const timestamp = Date.now();
+
+  const image = `https://static-cdn.jtvnw.net/previews-ttv/live_user_${name}-1920x1080.jpg?NgOqCvLCECvrHGtf=1&t=${timestamp}`;
+  const url = `https://www.twitch.tv/${username}`;
+
+  return { image, url };
+}
+
+async function startStream(data) {
   if (mongoose.connection.readyState !== 1) return;
 
   const guild = await client.guilds.fetch(process.env.guildID);
@@ -69,8 +78,9 @@ async function startStream(client, data) {
   const channel = await guild.channels.fetch(channelId);
   if (!channel) return;
 
-  const { user_login, user_name, game_name, title, viewer_count } = data;
-  const { image, url } = createItems(user_name);
+  const { username, category, title, viewer_count, avatar } = data;
+  const user_login = username.toLowerCase();
+  const { image, url } = createItems(username);
 
   let streamList = await streamModel.findOne({
     guild: guild.id,
@@ -98,25 +108,20 @@ async function startStream(client, data) {
     }
   );
 
-  presenceHandler.streamPresence(client, title, user_name);
-
-  const { result } = await getUserProfile(user_login);
-  const { profile_image_url } = result;
+  presenceHandler.streamPresence(client, title, username);
 
   const embed = new EmbedBuilder()
     .setAuthor({
-      name: user_name,
-      iconURL: profile_image_url,
+      name: username,
+      iconURL: avatar,
       url,
     })
     .setTitle(`**${title}**`)
     .setURL(url)
     .setDescription(
-      `Streaming **${
-        game_name || `Just Chatting`
-      }** for ${viewer_count} viewers`
+      `Streaming **${category || `Just Chatting`}** for ${viewer_count} viewers`
     )
-    .setThumbnail(profile_image_url)
+    .setThumbnail(avatar)
     .setImage(image)
     .setColor(utils.colors.twitch)
     .setTimestamp(Date.now())
@@ -125,15 +130,12 @@ async function startStream(client, data) {
       iconURL: utils.footers.twitch,
     });
 
-  const announcement = `Hey ${utils.tag}\n**${user_name}** is now LIVE on Twitch! 😍🔔\n\n## ${title}\n\n${url}`;
+  const announcement = `Hey ${utils.tag}\n**${username}** is now LIVE on Twitch! 😍🔔\n\n## ${title}\n\n${url}`;
 
-  const { urlButton } = createUrlButton(utils.labels.stream, url);
+  const urlButton = createUrlButton(utils.labels.stream, url);
   const button = new ActionRowBuilder().addComponents(urlButton);
 
-  if (notifiedChannels.has(user_login)) return;
-  notifiedChannels.add(user_login);
-
-  console.log(`${consoleTags.app} ${user_name}'s twitch notification sent.`);
+  console.log(`${consoleTags.app} ${username}'s twitch notification sent.`);
 
   const msg = await channel.send({
     content: announcement,
@@ -149,13 +151,9 @@ async function startStream(client, data) {
       components: [button],
     });
   }, 2_000);
-
-  setTimeout(() => {
-    notifiedChannels.delete(user_login);
-  }, 600_000);
 }
 
-async function updateStream(client, data) {
+async function updateStream(data) {
   if (mongoose.connection.readyState !== 1) return;
 
   const guild = await client.guilds.fetch(process.env.guildID);
@@ -167,29 +165,30 @@ async function updateStream(client, data) {
   });
   if (!eventsList) return;
 
-  const { user_login, user_name, game_name, title, viewer_count } = data;
-
-  const { image, url } = createItems(user_name);
+  const { username, category, title, viewer_count } = data;
+  const user_login = username.toLowerCase();
+  const { image, url } = createItems(username);
 
   const streamer = STREAMERS[user_login];
   if (!streamer.embed) return;
 
   let update = false;
-  if (streamer.streamData.game_name != game_name) update = true;
-  if (streamer.streamData.title != title) update = true;
+  if (
+    streamer.streamData.category != category ||
+    streamer.streamData.title != title
+  )
+    update = true;
 
   if (!update) return;
 
-  presenceHandler.streamPresence(client, title, user_name);
+  presenceHandler.streamPresence(client, title, username);
 
-  const announcement = `Hey ${utils.tag}\n**${user_name}** is now LIVE on Twitch! 😍🔔\n\n## ${title}\n\n${url}`;
+  const announcement = `Hey ${utils.tag}\n**${username}** is now LIVE on Twitch! 😍🔔\n\n## ${title}\n\n${url}`;
 
   const embed = streamer.embed
     .setTitle(`**${title}**`)
     .setDescription(
-      `Streaming **${
-        game_name || `Just Chatting`
-      }** for ${viewer_count} viewers`
+      `Streaming **${category || `Just Chatting`}** for ${viewer_count} viewers`
     )
     .setImage(image);
 
@@ -198,12 +197,12 @@ async function updateStream(client, data) {
     content: announcement,
   });
 
-  console.log(`${consoleTags.app} ${user_name}'s twitch notification updated.`);
+  console.log(`${consoleTags.app} ${username}'s twitch notification updated.`);
 
   updateStreamerData(user_login, data, embed, announcement, msg);
 }
 
-async function endStream(client, channel) {
+async function endStream(data) {
   if (mongoose.connection.readyState !== 1) return;
 
   const guild = await client.guilds.fetch(process.env.guildID);
@@ -215,28 +214,25 @@ async function endStream(client, channel) {
   });
   if (!eventsList) return;
 
-  const login = getLoginFromChannel(channel);
-  if (!login) return;
-
-  const streamer = STREAMERS[login];
-  if (!streamer.embed) return;
+  const user_login = data.username.toLowerCase();
 
   await streamModel.updateOne(
     {
       guild: guild.id,
-      Streamer: login,
+      Streamer: user_login,
     },
     { IsLive: false }
   );
 
   presenceHandler.mainPresence(client);
 
-  const { result } = await getUserProfile(login);
-  const { offline_image_url } = result;
+  const { offline_image } = data;
+  const announcement = `${data.username} has gone offline. 😢`;
 
-  const announcement = `${channel} has gone offline. 😢`;
+  const streamer = STREAMERS[user_login];
+  if (!streamer.embed) return;
 
-  const embed = streamer.embed.setImage(offline_image_url);
+  const embed = streamer.embed.setImage(offline_image);
 
   await streamer.msg.edit({
     embeds: [embed],
@@ -245,14 +241,128 @@ async function endStream(client, channel) {
   });
 
   console.log(
-    `${consoleTags.app} ${channel}'s twitch notification edited to offline mode.`
+    `${consoleTags.app} ${data.username}'s twitch notification edited to offline mode.`
   );
 
-  resetStreamerData(login);
+  resetStreamerData(user_login);
+}
+
+async function newVideo(data) {
+  if (mongoose.connection.readyState !== 1) return;
+
+  const guild = await client.guilds.fetch(process.env.guildID);
+  if (!guild) return;
+
+  const eventsList = await eventsModel.findOne({
+    guildId: guild.id,
+    Video: true,
+  });
+  if (!eventsList) return;
+
+  const channelsList = await channelModel.findOne({
+    guildId: guild.id,
+  });
+  if (!channelsList) return;
+
+  const channelId = channelsList.videoId;
+  if (!channelId) return;
+
+  const channel = await guild.channels.fetch(channelId);
+  if (!channel) return;
+
+  const user_login = data.username === "Sayeh" ? "Sayeh" : "Hamid";
+
+  let videoList = await videoModel.findOne({
+    guild: guild.id,
+    Channel: user_login,
+  });
+
+  if (!videoList) {
+    videoList = new videoModel({
+      guild: guild.id,
+      Channel: user_login,
+      VideoId: data.latest[0].id,
+    });
+
+    return await videoList.save();
+  }
+
+  if (notifiedChannels.has(user_login)) return;
+  notifiedChannels.add(user_login);
+
+  await videoModel.updateOne(
+    { guild: guild.id, Channel: user_login },
+    {
+      VideoId: data.latest[0].id,
+    }
+  );
+
+  const { title, url, id } = data.latest[0];
+
+  const thumbnailId = id.slice(9);
+  const image = `https://img.youtube.com/vi/${thumbnailId}/maxresdefault.jpg`;
+  const channelUrl =
+    data.username === "Sayeh"
+      ? utils.urls.youtube_sayeh
+      : utils.urls.youtube_hamid;
+
+  presenceHandler.videoPresence(client);
+
+  const embed = new EmbedBuilder()
+    .setAuthor({
+      name: data.username,
+      iconURL: data.avatar,
+      url: channelUrl,
+    })
+    .setTitle(`**${title}**`)
+    .setURL(url)
+    .setDescription(`${data.username} published a video on YouTube!`)
+    .setColor(utils.colors.youtube)
+    .setTimestamp(Date.now())
+    .setImage(image)
+    .setThumbnail(data.avatar)
+    .setFooter({
+      iconURL: utils.footers.youtube,
+      text: utils.texts.youtube,
+    });
+
+  const announcement = `Hey ${utils.tag}\n**${data.username}** just published a new video! 😍🔔\n\n## ${title}\n\n${url}`;
+
+  const urlButton = createUrlButton(utils.labels.video, url);
+  const button = new ActionRowBuilder().addComponents(urlButton);
+
+  const msg = await channel.send({
+    content: announcement,
+  });
+
+  setTimeout(async () => {
+    await msg?.edit({
+      embeds: [embed],
+      components: [button],
+    });
+  }, 2_000);
+
+  console.log(
+    `${consoleTags.notif} ${data.username} just published a new video on YouTube!`
+  );
+
+  setTimeout(() => {
+    notifiedChannels.delete(user_login);
+  }, 600_000);
+}
+
+async function notifDeveloper(message) {
+  const developer = await client.users.fetch(process.env.developerID);
+  if (!developer) return;
+
+  await developer.send(message);
 }
 
 module.exports = {
+  getNotifClient,
   startStream,
   updateStream,
   endStream,
+  newVideo,
+  notifDeveloper,
 };

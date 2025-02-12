@@ -1,10 +1,10 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { gifs, colors } = require("../../utils/main/mainUtils");
+const { gifs, colors, tags } = require("../../utils/main/mainUtils");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("spank")
-    .setDescription("Spank someone")
+    .setDescription(`${tags.images} Spank someone.`)
     .addUserOption((option) =>
       option.setName("user").setDescription("Pick a member").setRequired(true)
     ),

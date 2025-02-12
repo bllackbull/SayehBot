@@ -1,5 +1,6 @@
 const { ButtonBuilder, ActionRowBuilder, ButtonStyle } = require("discord.js");
 const { buttons } = require("../player/musicUtils");
+const { bookmark } = require("./mainUtils").emojis;
 
 function createButton(customId, emoji, style, disabled) {
   return new ButtonBuilder()
@@ -80,33 +81,28 @@ function createWarningButtons() {
     .setCustomId("continue")
     .setLabel("Continue")
     .setStyle(ButtonStyle.Success);
-  const cancelButton = new ButtonBuilder()
+
+  const cancel = new ButtonBuilder()
     .setCustomId("cancel")
     .setLabel("Cancel")
     .setStyle(ButtonStyle.Danger);
 
-  const button = new ActionRowBuilder().addComponents(
-    cancelButton,
-    continueButton
-  );
+  const button = new ActionRowBuilder().addComponents(cancel, continueButton);
 
   return button;
 }
 
 function createUrlButton(label, url) {
-  const urlButton = new ButtonBuilder()
+  return new ButtonBuilder()
     .setLabel(label)
     .setURL(url)
     .setStyle(ButtonStyle.Link);
-
-  return { urlButton };
 }
 
 function createGameButtons(customId, recentRunUrl, bestRunUrl) {
   const bookmarkButton = new ButtonBuilder()
     .setCustomId(customId)
-    .setLabel("Bookmark")
-    .setEmoji(buttons.bookmark)
+    .setEmoji(bookmark)
     .setStyle(ButtonStyle.Primary);
 
   const button = new ActionRowBuilder().addComponents(bookmarkButton);
@@ -128,18 +124,36 @@ function createGameButtons(customId, recentRunUrl, bestRunUrl) {
   return button;
 }
 
-function createBlackjackButtons() {
-  const hitButton = new ButtonBuilder()
+function createBlackjackButtons(disableHit, disableDouble, disableSurrender) {
+  const hit = new ButtonBuilder()
     .setCustomId("hit")
     .setLabel("𝐇𝐢𝐭")
-    .setStyle(ButtonStyle.Primary);
+    .setStyle(ButtonStyle.Success)
+    .setDisabled(disableHit);
 
-  const standButton = new ButtonBuilder()
+  const double = new ButtonBuilder()
+    .setCustomId("double")
+    .setLabel("𝐃𝐨𝐮𝐛𝐥𝐞")
+    .setStyle(ButtonStyle.Primary)
+    .setDisabled(disableDouble);
+
+  const stand = new ButtonBuilder()
     .setCustomId("stand")
     .setLabel("𝐒𝐭𝐚𝐧𝐝")
     .setStyle(ButtonStyle.Secondary);
 
-  const button = new ActionRowBuilder().addComponents(hitButton, standButton);
+  const surrender = new ButtonBuilder()
+    .setCustomId("surrender")
+    .setEmoji("🏳️")
+    .setStyle(ButtonStyle.Danger)
+    .setDisabled(disableSurrender);
+
+  const button = new ActionRowBuilder().addComponents(
+    hit,
+    double,
+    stand,
+    surrender
+  );
 
   return button;
 }

@@ -8,6 +8,7 @@ const { handleDatabaseError } = require("../../utils/main/handleErrors");
 const utils = require("../../utils/main/mainUtils");
 const eventsModel = require("../../database/eventsModel");
 const channelModel = require("../../database/channelModel");
+const wsModel = require("../../database/wsModel");
 const { getSystemUsage } = require("../../utils/client/handleSystemUsage");
 const { version, dependencies } = require("../../../package.json");
 const { pageReact } = require("../../utils/main/handleReaction");
@@ -16,7 +17,7 @@ const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("info")
-    .setDescription(`${utils.tags.updated} ${utils.tags.mod} See bot information`)
+    .setDescription(`${utils.tags.mod} See bot information.`)
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .setDMPermission(false),
 
@@ -29,6 +30,9 @@ module.exports = {
       const infoEmbed = await interaction.deferReply({
         fetchReply: true,
       });
+
+      const wsProfile = await wsModel.findOne();
+      const wsConnection = wsProfile ? wsProfile.Connection : false;
 
       const discordJsVersion = dependencies["discord.js"].replace("^", "");
       const playerVersion = dependencies["discord-player"].replace("^", "");
@@ -69,6 +73,7 @@ module.exports = {
         video: eventsList?.Video ?? false,
         level: eventsList?.Level ?? false,
         moderation: eventsList?.Moderation ?? false,
+        player: eventsList?.PlayerStart ?? false,
       };
 
       const channelsList = await channelModel.findOne({
@@ -87,20 +92,23 @@ module.exports = {
       };
 
       const channelNames = {};
-
       for (const [key, channelId] of Object.entries(channelString)) {
         if (channelId) {
           const channel = await client.channels.fetch(channelId);
-
-          if (channel) channelNames[key] = channel.name;
-          else channelNames[key] = undefined;
+          channelNames[key] = channel ? channel.name : undefined;
         } else {
           channelNames[key] = undefined;
         }
       }
 
+      const { enabled, disabled, connected, disconnected } = utils.modes;
+
       const uptime = `### Uptime:
                       \n${uptimeString}`;
+
+      const wsStatus = `### WebSocket Connection Status:\n${
+        wsConnection ? connected : disconnected
+      }`;
 
       const versions = `### Versions:
                       > SayehBot: \`${version}\`
@@ -108,7 +116,6 @@ module.exports = {
                       > discord.js: \`${discordJsVersion}\`
                       > discord-player: \`${playerVersion}\``;
 
-      const { enabled, disabled } = utils.modes;
       const eventsDescription = `### Events:
                               \nSee which features of the bot are enabled:\n
                               > **${utils.events.welcome}** : ${
@@ -134,6 +141,9 @@ module.exports = {
       }
                               > **${utils.events.mod}** : ${
         eventsString.moderation ? enabled : disabled
+      }
+                              > **${utils.events.player}** : ${
+        eventsString.player ? enabled : disabled
       }`;
 
       const channelsDescription = `### Special Channels:
@@ -164,7 +174,7 @@ module.exports = {
       }`;
 
       const pages = [
-        `${uptime}\n${usageDescription}\n${versions}`,
+        `${uptime}\n${usageDescription}\n${wsStatus}\n${versions}`,
         `${eventsDescription}\n${channelsDescription}`,
       ];
 
@@ -192,14 +202,15 @@ module.exports = {
 
       collector.on("collect", async (reaction, user) => {
         if (user.bot) return;
+        const { users, emoji } = reaction;
 
-        await reaction.users.remove(user.id);
+        await users.remove(user.id);
 
-        if (reaction.emoji.name === "➡" && page < totalPages - 1) {
+        if (emoji.name.includes("next") && page < totalPages - 1) {
           page++;
-        } else if (reaction.emoji.name === "⬅" && page !== 0) {
+        } else if (emoji.name.includes("previous") && page !== 0) {
           --page;
-        }
+        } else return;
 
         embed.setDescription(pages[page]).setFooter({
           text: `${utils.texts.bot} | Page ${page + 1} of ${totalPages}`,

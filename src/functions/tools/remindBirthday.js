@@ -27,30 +27,37 @@ module.exports = (client) => {
       checkBirthdayProfile = await checkBirthday.findOne({
         guildId: guild.id,
         Date: reminder,
-        IsTodayChecked: false,
       });
 
-      if (!checkBirthdayProfile) return;
+      if (checkBirthdayProfile) {
+        if (!checkBirthdayProfile.IsTodayChecked) {
+          await checkBirthday.updateOne(
+            { guildId: guild.id, Date: reminder },
+            { IsTodayChecked: true }
+          );
+        }
+      } else {
+        checkBirthdayProfile = await checkBirthday.updateOne(
+          { guildId: guild.id },
+          { Date: reminder, IsTodayChecked: true }
+        );
 
-      checkBirthdayProfile = await checkBirthday.updateOne(
-        { guildId: guild.id },
-        { Date: reminder, IsTodayChecked: true }
-      );
+        const birthdayProfile = await birthdayModel.findOne({
+          GuildId: guild.id,
+          Birthday: reminder,
+        });
 
-      const birthdayProfile = await birthdayModel.findOne({
-        Birthday: reminder,
-      });
+        if (!birthdayProfile) return;
 
-      if (!birthdayProfile) return;
+        const user = birthdayProfile.User;
+        const age = parseInt(birthdayProfile.Age) + 1;
 
-      const user = birthdayProfile.User;
-      const age = parseInt(birthdayProfile.Age) + 1;
+        await birthdayModel.updateOne({ User: user }, { Age: `${age}` });
 
-      await birthdayModel.updateOne({ User: user }, { Age: `${age}` });
-
-      setTimeout(async () => {
-        await client.emit("birthday", birthdayProfile);
-      }, 1000);
+        setTimeout(async () => {
+          await client.emit("birthday", birthdayProfile.User, birthdayProfile.GuildId, age);
+        }, 1000);
+      }
     }
   };
 };

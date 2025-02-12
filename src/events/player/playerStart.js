@@ -1,3 +1,4 @@
+const eventsModel = require("../../database/eventsModel");
 const playerModel = require("../../database/playerModel");
 const { createTrackEmbed } = require("../../utils/player/createMusicEmbed");
 const { createButtons } = require("../../utils/main/createButtons");
@@ -9,6 +10,12 @@ module.exports = {
 
   async execute(queue, song) {
     ////////////// return checks //////////////
+    const eventModel = await eventsModel.findOne({
+      guildId: queue.metadata.guild,
+      PlayerStart: true,
+    });
+    if (!eventModel) return;
+
     const playerList = await playerModel.findOne({
       guildId: queue.metadata.guild,
     });

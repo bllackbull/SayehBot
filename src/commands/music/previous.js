@@ -12,7 +12,8 @@ const deletionHandler = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("previous")
-    .setDescription("Go back to the previous track in the current queue"),
+    .setDescription("Go back to the previous track in the current queue.")
+    .setDMPermission(false),
 
   async execute(interaction, client) {
     ////////////// base variables //////////////

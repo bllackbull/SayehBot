@@ -1,17 +1,17 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const youtubeHandler = require("../../utils/api/youtubeData");
 const { handleNoResultError } = require("../../utils/main/handleErrors");
-const utils = require("../../utils/main/mainUtils");
 const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
+const utils = require("../../utils/main/mainUtils");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("youtube")
-    .setDescription("Get info about a youtube channel")
+    .setDescription("Get info about a youtube channel.")
     .addStringOption((option) =>
       option
         .setName("channel")
-        .setDescription("Input a youtube channel name")
+        .setDescription("Input a youtube channel name.")
         .setRequired(true)
     ),
 
@@ -39,11 +39,17 @@ module.exports = {
         })
         .join("\n");
 
+      const subs = Number(channelData.statistics.subscriberCount);
+      const views = Number(channelData.statistics.viewCount);
+
       const title = channelData.brandingSettings.channel.title;
       const url = `https://youtube.com/channel/${channelData.id}`;
-      const subCount = `**${channelData.statistics.subscriberCount}** subscribers`;
-      const viewCount = `**${channelData.statistics.viewCount}** views`;
+      const subCount = `**${subs.toLocaleString()}** subscribers`;
+      const viewCount = `**${views.toLocaleString()}** views`;
       const videoCount = `**${channelData.statistics.videoCount}** videos`;
+      const avatar = channelData.snippet.thumbnails?.high?.url || undefined;
+      const banner =
+        channelData.brandingSettings.image?.bannerExternalUrl || undefined;
       const channelDescription =
         channelData.brandingSettings.channel.description || "";
 
@@ -51,11 +57,11 @@ module.exports = {
         .setTitle(title)
         .setURL(url)
         .setDescription(
-          `${subCount}\n${viewCount}\n${videoCount}\n\n${channelDescription}\n\n### Latest Videos :\n${videoList}`
+          `${subCount}\n${viewCount}\n${videoCount}\n\n${channelDescription}\n\n### Latest Videos :\n${videoList}\n\n **Channel Id :** ${channelId}`
         )
         .setColor(utils.colors.youtube)
-        .setThumbnail(channelData.snippet.thumbnails.high.url)
-        .setImage(channelData.brandingSettings.image.bannerExternalUrl)
+        .setThumbnail(avatar)
+        .setImage(banner)
         .setFooter({
           text: utils.texts.youtube,
           iconURL: utils.footers.youtube,

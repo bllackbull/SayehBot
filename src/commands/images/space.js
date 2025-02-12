@@ -11,7 +11,7 @@ const nasa = new apod.Client({
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("space")
-    .setDescription("Get NASA picture of the day"),
+    .setDescription(`${utils.tags.images} Get NASA picture of the day.`),
 
   async execute(interaction) {
     let success = false;

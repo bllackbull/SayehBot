@@ -8,17 +8,18 @@ const utils = require("../../utils/main/mainUtils");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("yell")
-    .setDescription(`${utils.tags.mod} Yell at everyone in a channel`)
+    .setDescription(`${utils.tags.mod} Yell at everyone in a channel!`)
     .addChannelOption((option) =>
       option
         .setName("channel")
-        .setDescription("Select a channel")
+        .setDescription("Select a channel.")
         .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("message")
-        .setDescription("Input a message to announce")
+        .setDescription("Input a message to announce.")
+        .setMaxLength(2400)
         .setRequired(true)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)

@@ -1,19 +1,38 @@
+const emojis = {
+  sayehai: "<:sayehai:1327276070445256886>",
+  bookmark: "<:bookmark:1271846805306605599>",
+  bin: "<:bin:1328809241816862750>",
+  next: "<:nextpage:1329040805679075369>",
+  previous: "<:previouspage:1329042943058645053>",
+  help: "<:help:1329056395554848788>",
+  icon: "<:webicon:1329057518722355252>",
+  user: "<:user:1329059359417958501>",
+  qr: "<:qr:1329059947849187378>",
+  command: "<:command:1329061892932632606>",
+  message: "<:message:1329063406224805938>",
+  cursor: "<:cursor:1329064273972035625>",
+  spades: "<:spades:1329100609013420074>",
+  hearts: "<:hearts:1329100557142458450>",
+  diamonds: "<:diamonds:1329100522199978096>",
+  clubs: "<:clubs:1329100462435078295>",
+};
+
 const titles = {
   clear: "**🚮 Clear**",
   delete: "**🚮 Delete**",
-  help: "**❔ Help**",
+  help: `**${emojis.help} Help**`,
   ping: "**📶 Ping**",
-  qr: "**⏹ QR Code**",
+  qr: `**${emojis.qr} QR Code**`,
   scan: "**🌍 Website Virus Scan**",
   gamble_winner: "**🥇 Winner**",
   gamble_loser: "**😢 Loser**",
-  bookmark: "**🔖 Bookmark**",
+  bookmark: `**${emojis.bookmark} Bookmark**`,
   level: "**🤖 Leveling System**",
   leaderboard: "🏅 Leaderboard",
   birthday: "**🎂 Birthday**",
-  commands: "**/ Available Commands**",
-  presence: "**👤 Presence Updated**",
-  profile: "**👤 Profile Updated**",
+  commands: `**${emojis.command} Available Commands**`,
+  presence: `**${emojis.user} Presence Updated**`,
+  profile: `**${emojis.user} Profile Updated**`,
   error: "**Error**",
   warn: "**Target Warned**",
   warning: "**Warning!**",
@@ -23,13 +42,15 @@ const titles = {
   reportcase_close: "**Case Closed**",
   report_success: "**Successfully Reported**",
   action_failed: "**Action Failed**",
-  simulate: "**Simulation**",
+  test: "**🧪 Event Test**",
   info: "**Bot Info**",
+  system: "**⚙️ System Action**",
   events: "**Events**",
-  website: "**sayehgame.com**",
+  website: `**${emojis.icon} sayehgame.com**`,
   yell: "**📢 Yell**",
   announce: "**Announcement**",
   blackjack: "🃏 𝐁𝐥𝐚𝐜𝐤𝐣𝐚𝐜𝐤",
+  sayehai: `**${emojis.sayehai} SayehAI**`,
 };
 
 const events = {
@@ -40,7 +61,10 @@ const events = {
   stream: "📺 Stream",
   video: "📺 Video",
   level: "🥇 Level",
+  levelUp: "📈 Level Up",
+  levelDown: "📉 Level Down",
   mod: "⚔️ Moderation",
+  player: "🎵 Player",
 };
 
 const presences = {
@@ -97,6 +121,7 @@ const colors = {
   storm_weather: "#4e6969",
   cloud_weather: "#f1f1f1",
   snow_weather: "#ebecf1",
+  sayehai: "#ff00ee",
 };
 
 const footers = {
@@ -114,12 +139,13 @@ const footers = {
   bot: "https://i.imgur.com/v8O0feS.png",
   nasa: "https://i.imgur.com/V9awHxy.png",
   imdb: "https://download.logo.wine/logo/IMDb/IMDb-Logo.wine.png",
+  exclamation: "https://i.imgur.com/saRAWUz.png",
 };
 
 const thumbnails = {
   tools: "https://i.imgur.com/l15zpW0.png",
   clear: "https://i.imgur.com/FhH4jJL.png",
-  delete: "https://i.imgur.com/NA5jsRa.png",
+  delete: "https://i.imgur.com/YPaDC4S.png",
   system: "https://i.imgur.com/UD49B9U.png",
   ping: "https://i.imgur.com/e7YutBG.png",
   no_results: "https://i.imgur.com/mWSzYrQ.png",
@@ -134,10 +160,11 @@ const thumbnails = {
   roll: "https://i.imgur.com/851YpFE.png",
   casino: "https://i.imgur.com/NabJ4ov.png",
   bookmark: "https://i.imgur.com/FjwLaip.png",
-  twitch_sayeh: "https://i.imgur.com/7aO5p95.png",
+  twitch_sayeh: "https://i.imgur.com/yaE4zRe.png",
   twitch_hamid: "https://i.imgur.com/VdPzgLm.png",
   twitch_offline_sayeh: "https://i.imgur.com/6BsizDi.jpg",
   twitch_offline_hamid: "https://i.imgur.com/nmKK3BU.jpg",
+  youtube_sayeh_stream: "https://i.imgur.com/qjvAnGf.jpg",
   tf2: "https://i.imgur.com/DQgNJgP.png",
   cs: "https://i.imgur.com/J0NbZqS.png",
   dota: "https://i.imgur.com/VrUFhs4.png",
@@ -155,7 +182,7 @@ const gifs = {
 
 const urls = {
   youtube_sayeh: "https://www.youtube.com/@Say3h/?sub_confirmation=1",
-  youtube_hamid: "https://www.youtube.com/@Hamitz/?sub_confirmation=1",
+  youtube_hamid: "https://www.youtube.com/@SayehStream/?sub_confirmation=1",
   twitch_sayeh: "https://twitch.tv/Sayeh",
   kick: "https://kick.com/sayeh",
   telegram: "https://t.me/sayeh_game",
@@ -208,13 +235,23 @@ const bannedWords = [
 const formats = ["image/png", "image/gif", "image/jpeg"];
 const formatsLabel = ".png, .gif, .jpeg, .jpg";
 
-const modes = { enabled: "Enabled ✅", disabled: "Disabled ❌" };
+const modes = {
+  enabled: "Enabled ✅",
+  disabled: "Disabled ❌",
+  connected: "Connected ✅",
+  disconnected: "Disconnected ❌",
+};
 
 const tags = {
   new: "[New]",
   updated: "[Updated]",
+  reworked: "[Reworked]",
   mod: "[Mods-only]",
+  admin: "[Admins-only]",
+  music: "[Music]",
   game: "[Game]",
+  tools: "[Tools]",
+  images: "[Images]",
 };
 
 const consoleTags = {
@@ -223,6 +260,7 @@ const consoleTags = {
   warning: "[Warning]",
   error: "[Error]",
   player: "[Player]",
+  ws: "[WebSocket]",
 };
 
 const results = {
@@ -231,6 +269,8 @@ const results = {
   busted: "𝐁𝐮𝐬𝐭𝐞𝐝! 𝐘𝐨𝐮 𝐥𝐨𝐬𝐭.",
   tie: "𝐓𝐢𝐞!",
 };
+
+const TOKEN_LIMIT = 2_000;
 
 module.exports = {
   titles,
@@ -244,6 +284,7 @@ module.exports = {
   texts,
   tag,
   urls,
+  emojis,
   warnPenalties,
   formats,
   formatsLabel,
@@ -252,4 +293,5 @@ module.exports = {
   tags,
   consoleTags,
   results,
+  TOKEN_LIMIT,
 };

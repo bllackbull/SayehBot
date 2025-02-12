@@ -4,9 +4,6 @@ module.exports = {
   name: "error",
 
   async execute(error) {
-    console.error(
-      `${consoleTags.error} While executing twitch event listener: `,
-      error
-    );
+    console.error(`${consoleTags.ws} error:`, error.message);
   },
 };

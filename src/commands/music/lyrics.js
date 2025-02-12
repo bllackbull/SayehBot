@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { footers } = require("../../utils/player/musicUtils");
+const { footers, colors } = require("../../utils/player/musicUtils");
 const { splitLyrics } = require("../../utils/player/splitLyrics");
 const { pageReact } = require("../../utils/main/handleReaction");
 const { handleNoResultError } = require("../../utils/main/handleErrors");
@@ -11,11 +11,11 @@ const genius = new Genius.Client();
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("lyrics")
-    .setDescription("Get lyrics of a song from Genius")
+    .setDescription("Get lyrics of a song from Genius.")
     .addStringOption((option) =>
       option
         .setName("query")
-        .setDescription("Input a song name")
+        .setDescription("Input a song name.")
         .setRequired(true)
     ),
 
@@ -31,7 +31,7 @@ module.exports = {
     ////////////// getting lyrics //////////////
     await genius.songs
       .search(`${songTitle}`)
-      .then(async function (result) {
+      .then(async (result) => {
         const song = result[0];
         const lyrics = await song.lyrics();
 
@@ -44,7 +44,7 @@ module.exports = {
           })
           .setURL(`${song.url}`)
           .setThumbnail(`${song.image}`)
-          .setColor(0x256fc4)
+          .setColor(colors.music)
           .setFooter({
             iconURL: footers.genius,
             text: "Genius",
@@ -54,7 +54,7 @@ module.exports = {
           ////////////// split lyrics //////////////
           const chunks = splitLyrics(lyrics, 1000);
 
-          let totalPages = chunks.length;
+          const totalPages = chunks.length;
           let page = 0;
 
           let res = chunks[page];
@@ -73,12 +73,13 @@ module.exports = {
 
           collector.on("collect", async (reaction, user) => {
             if (user.bot) return;
+            const { users, emoji } = reaction;
 
-            await reaction.users.remove(user.id);
+            await users.remove(user.id);
 
-            if (reaction.emoji.name === `➡` && page < totalPages - 1) {
+            if (emoji.name.includes("next") && page < totalPages - 1) {
               page++;
-            } else if (reaction.emoji.name == `⬅` && page !== 0) {
+            } else if (emoji.name.includes("previous") && page !== 0) {
               --page;
             }
 
@@ -103,7 +104,7 @@ module.exports = {
 
         success = true;
       })
-      .catch((error) => {
+      .catch(() => {
         handleNoResultError(interaction);
       });
 

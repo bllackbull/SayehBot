@@ -9,43 +9,43 @@ const utils = require("../../utils/main/mainUtils");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("giveaway")
-    .setDescription(`${utils.tags.mod} Manage giveaways`)
+    .setDescription(`${utils.tags.mod} Manage giveaways.`)
     .addSubcommand((subcommand) =>
       subcommand
         .setName("start")
-        .setDescription(`${utils.tags.mod} Start a giveaway`)
+        .setDescription(`${utils.tags.mod} Start a giveaway.`)
         .addStringOption((option) =>
           option
             .setName("duration")
-            .setDescription("Provide a duration")
+            .setDescription("Provide a duration.")
             .setRequired(true)
         )
         .addIntegerOption((option) =>
           option
             .setName("winners")
-            .setDescription("Amount of winners")
+            .setDescription("Input the amount of winners.")
             .setRequired(true)
         )
         .addStringOption((option) =>
           option
             .setName("prize")
-            .setDescription("Provide the name of prize")
+            .setDescription("Provide the name of the prize.")
             .setRequired(true)
         )
         .addChannelOption((option) =>
           option
             .setName("channel")
-            .setDescription("Channel to perform giveaway in")
+            .setDescription("Select the channel to perform the giveaway in.")
         )
     )
     .addSubcommand((subcommand) =>
       subcommand
         .setName("action")
-        .setDescription(`${utils.tags.mod} Manage the current giveaway`)
+        .setDescription(`${utils.tags.mod} Manage the current giveaway.`)
         .addStringOption((option) =>
           option
             .setName("options")
-            .setDescription("Select an option")
+            .setDescription("Select an option.")
             .setRequired(true)
             .addChoices(
               {
@@ -69,7 +69,7 @@ module.exports = {
         .addStringOption((option) =>
           option
             .setName("message-id")
-            .setDescription("Provide the message-id of the giveaway")
+            .setDescription("Provide the message-id of the giveaway.")
             .setRequired(true)
         )
     )

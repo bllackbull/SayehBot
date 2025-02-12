@@ -1,12 +1,28 @@
-const reactions = ["⬅", "➡", "🔀", "🔁"];
+const { previous, next } = require("./mainUtils").emojis;
+const { shuffle, repeat, skip } = require("../player/musicUtils").buttons;
+
+const reactions = [previous, next, shuffle, repeat];
 const numberReactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"];
-const voteReaction = "⏭";
+const voteReaction = skip;
+
+const emojiNames = [
+  "previouspage",
+  "nextpage",
+  "shuffle",
+  "repeat",
+  "1️⃣",
+  "2️⃣",
+  "3️⃣",
+  "4️⃣",
+  "5️⃣",
+  "skip",
+];
 
 function createCollector(interaction, reply, emojis, timer) {
   emojis.forEach((emoji) => reply.react(emoji));
 
   const filter = (reaction, user) =>
-    emojis.includes(reaction.emoji.name) &&
+    emojiNames.includes(reaction.emoji.name) &&
     (!timer || user.id === interaction.user.id);
 
   const collectorOptions = timer ? { filter, time: timer } : { filter };

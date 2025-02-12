@@ -7,11 +7,11 @@ const movier = require("movier");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("movie")
-    .setDescription("Get info about a movie in IMDb")
+    .setDescription("Get info about a movie in IMDb.")
     .addStringOption((option) =>
       option
         .setName("name")
-        .setDescription("Input a movie name")
+        .setDescription("Input a movie name.")
         .setRequired(true)
     ),
 
@@ -25,7 +25,7 @@ module.exports = {
 
     await movier
       .getTitleDetailsByName(`${name}`)
-      .then(async function (result) {
+      .then(async (result) => {
         const embed = new EmbedBuilder()
           .setTitle(
             `**${result.name} ${result.titleYear} (${result.mainType})**`
@@ -77,7 +77,7 @@ module.exports = {
 
         success = true;
       })
-      .catch(async (e) => {
+      .catch(async () => {
         await handleNoResultError(interaction);
       });
 

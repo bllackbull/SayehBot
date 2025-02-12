@@ -10,36 +10,51 @@ const {
   handToString,
   hasAce,
 } = require("../../utils/main/handleDecks");
-const utils = require("../../utils/main/mainUtils");
 const { maxLevel } = require("../../utils/level/cardUtils");
-const { handleXpError } = require("../../utils/main/handleErrors");
+const errorHandler = require("../../utils/main/handleErrors");
 const { getUser } = require("../../utils/level/handleLevel");
 const { createBlackjackButtons } = require("../../utils/main/createButtons");
 const { handleBlackjackXP } = require("../../utils/level/handleLevel");
 const deletionHandler = require("../../utils/main/handleDeletion");
+const utils = require("../../utils/main/mainUtils");
+
+const openTables = new Set();
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("blackjack")
-    .setDescription(`${utils.tags.new} ${utils.tags.game} Play a round of blackjack with the bot`)
+    .setDescription(
+      `${utils.tags.updated} ${utils.tags.game} Play a round of blackjack with the bot.`
+    )
     .addIntegerOption((option) =>
       option
         .setName("bet")
-        .setDescription("Bet an amount of your XP on this round")
+        .setDescription("Bet an amount of your XP on this round.")
         .setMinValue(1000)
+        .setMaxValue(10000)
         .setRequired(true)
     ),
 
   async execute(interaction) {
+    const { guildId, channel } = interaction;
     let success = false;
-    const { guild, channel } = interaction;
+    let disableHit = false;
+    let disableDouble = false;
+    let disableSurrender = false;
+    let round = 0;
 
-    const bet = interaction.options.getInteger("bet");
-    const levelProfile = await getUser(guild.id, interaction.user);
+    let bet = interaction.options.getInteger("bet");
+    const levelProfile = await getUser(guildId, interaction.user);
 
-    if (levelProfile.totalxp < bet) {
-      handleXpError(interaction, interaction.user);
+    if (levelProfile && levelProfile.totalxp < bet) {
+      errorHandler.handleXpError(interaction, interaction.user);
+    } else if (levelProfile && levelProfile.totalxp < bet * 2) {
+      disableDouble = true;
+    } else if (openTables.has(interaction.user.id)) {
+      errorHandler.handleTableOpen(interaction);
     } else {
+      openTables.add(interaction.user.id);
+
       const deck = createDeck(6);
       const playerHand = [drawCard(deck), drawCard(deck)];
       const dealerHand = [drawCard(deck), drawCard(deck)];
@@ -61,7 +76,11 @@ module.exports = {
           text: "Dealer must hit soft 17.",
         });
 
-      const button = createBlackjackButtons();
+      const button = createBlackjackButtons(
+        disableHit,
+        disableDouble,
+        disableSurrender
+      );
 
       await interaction.reply({
         embeds: [embed],
@@ -78,6 +97,8 @@ module.exports = {
 
       collector.on("collect", async (i) => {
         if (i.user.id !== interaction.user.id) return;
+
+        round++;
 
         if (i.customId === "hit") {
           const newCard = drawCard(deck);
@@ -111,7 +132,41 @@ module.exports = {
           } else {
             result = utils.results.tie;
           }
+        } else if (i.customId === "double") {
+          bet *= 2;
+          disableHit = true;
+
+          const newCard = drawCard(deck);
+          playerHand.push(newCard);
+          playerScore = calculateScore(playerHand);
+
+          i.reply({
+            content: `You doubled down your bet to **${bet} XP** and received: **${newCard.value} ${newCard.suit}**`,
+            ephemeral: true,
+          });
+
+          if (playerScore > 21) result = utils.results.busted;
+        } else if (i.customId === "surrender") {
+          bet /= 2;
+
+          i.reply({
+            content: "You chose to surrender.",
+            ephemeral: true,
+          });
+
+          result = utils.results.lost;
         }
+
+        if (round > 0) {
+          disableDouble = true;
+          disableSurrender = true;
+        }
+
+        const updatedButton = createBlackjackButtons(
+          disableHit,
+          disableDouble,
+          disableSurrender
+        );
 
         if (result === "") {
           embed.setDescription(
@@ -122,14 +177,14 @@ module.exports = {
 
           await interaction.editReply({
             embeds: [embed],
-            components: [button],
+            components: [updatedButton],
           });
         } else {
           embed.setDescription(
             `# ${result}
-                      \n### Your Hand:\n${handToString(
-                        playerHand
-                      )} (Score: ${playerScore})\n### Dealer's Hand:\n${handToString(
+                        \n### Your Hand:\n${handToString(
+                          playerHand
+                        )} (Score: ${playerScore})\n### Dealer's Hand:\n${handToString(
               dealerHand
             )} (Score: ${dealerScore})`
           );
@@ -141,10 +196,12 @@ module.exports = {
 
           collector.stop();
 
+          if (!levelProfile) return;
           if (levelProfile.level >= maxLevel) return;
           if (result === utils.results.tie) return;
 
-          const XP = result === utils.results.won ? bet * 2 : bet;
+          const XP =
+            result === utils.results.won && playerScore == 21 ? bet * 1.5 : bet;
 
           await handleBlackjackXP(interaction, XP, result);
 
@@ -174,6 +231,10 @@ module.exports = {
 
           deletionHandler.handleNonMusicalDeletion(msg, success, 10);
         }
+      });
+
+      collector.on("end", () => {
+        openTables.delete(interaction.user.id);
       });
     }
 

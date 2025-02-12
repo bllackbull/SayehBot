@@ -4,15 +4,15 @@ const {
   EmbedBuilder,
 } = require("discord.js");
 const { mongoose } = require("mongoose");
+const noderiowrapper = require("noderiowrapper");
 const errorHandler = require("../../utils/main/handleErrors");
 const wowModel = require("../../database/wowModel");
-const utils = require("../../utils/main/mainUtils");
 const { getKeystoneUpgradeSymbol } = require("../../utils/api/wowKeystone");
 const { createGameButtons } = require("../../utils/main/createButtons");
 const { bookmark } = require("../../utils/api/handleBookmark");
 const { pageReact } = require("../../utils/main/handleReaction");
 const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
-const noderiowrapper = require("noderiowrapper");
+const utils = require("../../utils/main/mainUtils");
 
 const RIO = new noderiowrapper();
 
@@ -91,7 +91,7 @@ module.exports = {
               },
               {
                 name: "Raid Progress",
-                value: raid_progression["amirdrassil-the-dreams-hope"].summary,
+                value: raid_progression["nerubar-palace"].summary,
               },
               {
                 name: "Realm Class Rank",
@@ -154,10 +154,11 @@ module.exports = {
 
             collector.on("collect", async (reaction, user) => {
               if (user.bot) return;
+              const { users, emoji } = reaction;
 
-              await reaction.users.remove(user.id);
+              await users.remove(user.id);
 
-              if (reaction.emoji.name == "➡" && page < totalPages - 1) {
+              if (emoji.name.includes("next") && page < totalPages - 1) {
                 page++;
 
                 const gearItems = [
@@ -191,7 +192,7 @@ module.exports = {
                     inline: true,
                   });
                 });
-              } else if (reaction.emoji.name == "⬅" && page !== 0) {
+              } else if (emoji.name.includes("previous") && page !== 0) {
                 --page;
 
                 embed.setFields();

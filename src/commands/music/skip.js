@@ -8,11 +8,11 @@ const deletionHandler = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("skip")
-    .setDescription("Skip to the next track in the current queue")
+    .setDescription("Skip to the next track in the current queue.")
     .addIntegerOption((option) =>
       option
         .setName("position")
-        .setDescription("Input a track number")
+        .setDescription("Input a track number.")
         .setMinValue(1)
         .setRequired(false)
     )

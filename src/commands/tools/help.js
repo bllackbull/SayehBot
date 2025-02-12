@@ -4,46 +4,46 @@ const { maxLevel } = require("../../utils/level/cardUtils");
 const { pageReact } = require("../../utils/main/handleReaction");
 const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 
+const userInteractions =
+  "**`get avatar`** , **`get rank`** , **`get overwatch stats`** , **`get wow stats`** , **`play favorites`**";
+
+const messageInteractions = "**`report message`** , **`warn author`**";
+
+const helpPages = [
+  `### ${utils.emojis.cursor} User Interaction :
+\nRight click on a user in users list and select apps:
+\n${userInteractions}
+\n### ${utils.emojis.message} Message Interaction :
+\nRight click on a message and go to apps menu:
+\n${messageInteractions}
+\n### ${utils.emojis.command} Slash Commands :
+\nUse **\`/commands\`** to get a list of available slash commands.`,
+  `# Usage Guide :
+\n\n### 🌟 Leveling Guide :
+\nYou will gain XP by sending message, using commands and begin active in voice channels. Use **\`/rank\`** , **\`/leaderboard\`** for more information.
+\n\n### 🚀 XP Boost :
+\nYou will be granted XP boost by subscribing to Sayeh's twitch channel or boosting this server. The amount of this boost depends on the tier of your subscription:
+\n- Sayeh Twitch Sub Tier **1** : **25 %** XP BOOST
+\n- Sayeh Twitch Sub Tier **2** : **50 %** XP BOOST
+\n- Sayeh Twitch Sub Tier **3** : **100 %** XP BOOST
+\n- Server boost : **+ 50 %** Additional XP BOOST
+\n\n## 💕 Favorites Playlist :
+\nYou can add or remove a track from your favorite playlist by clicking the (♥) button whenever a track is playling. You can modify or play your favorite playlist at anytime with **\`/favorite\`** .
+\n\n### 📝 Note :
+\n- 🏁 MAX Level: **${maxLevel}**
+\n- 🎲 You will win or lose XP by using **\`/roll\`** . You can also win **10,000** XP by guessing right your upcoming roll! (30 sec cooldown)
+\n- 🃏 You can win or lose XP by playing **\`/blackjack\`** .`,
+];
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("help")
-    .setDescription("Get a guide to use the bot"),
+    .setDescription("Get a guide to use the bot."),
 
   async execute(interaction) {
     const helpEmbed = await interaction.deferReply({
       fetchReply: true,
     });
-
-    const userInteractions =
-      "**`get avatar`** , **`get rank`** , **`get overwatch stats`** , **`get wow stats`** , **`play favorite`**";
-
-    const messageInteractions = "**`report message`** , **`warn author`**";
-
-    const helpPages = [
-      `### 🖱 User Interaction :
-      \nRight click on a user in users list and select apps:
-      \n${userInteractions}
-      \n### ✉ Message Interaction :
-      \nRight click on a message and go to apps menu:
-      \n${messageInteractions}
-      \n### Slash Commands :
-      \nUse **\`/commands\`** to get a list of available slash commands.`,
-      `# Usage Guide :
-      \n\n### 🌟 Leveling Guide :
-      \nYou will gain XP by sending message, using commands and begin active in voice channels. Use **\`/rank\`** , **\`/leaderboard\`** for more information.
-      \n\n### 🚀 Boost :
-      \nYou will be granted XP boost by subscribing to Sayeh's twitch channel or boosting this server. The amount of this boost depends on the tier of your subscription:
-      \n- Sayeh twitch sub tier **1** : **25 %** XP BOOST
-      \n- Sayeh twitch sub tier **2** : **50 %** XP BOOST
-      \n- Sayeh twitch sub tier **3** : **100 %** XP BOOST
-      \n- Server boost : **+ 50 %** Additional XP BOOST
-      \n\n## 💕 Custom Favorite Playlist :
-      \nYou can add or remove a track from your favorite playlist by clicking the (♥) button whenever a track is playling. You can modify or play your favorite playlist at anytime with **\`/favorite\`** .
-      \n\n### 📝 Note :
-      \n- 🏁 Level Cap: **${maxLevel}**
-      \n- 🎲 You will win or lose XP by using **\`/roll\`** . You can also win **50,000** XP by guessing right your upcoming roll! (30 sec cooldown)
-      \n- 🃏 You can win or lose XP by playing **\`/blackjack\`** .`,
-    ];
 
     let page = 0;
     const totalPages = helpPages.length;
@@ -66,14 +66,15 @@ module.exports = {
 
     collector.on("collect", async (reaction, user) => {
       if (user.bot) return;
+      const { users, emoji } = reaction;
 
-      await reaction.users.remove(user.id);
+      await users.remove(user.id);
 
-      if (reaction.emoji.name === "➡" && page < totalPages - 1) {
+      if (emoji.name.includes("next") && page < totalPages - 1) {
         page++;
-      } else if (reaction.emoji.name === "⬅" && page !== 0) {
+      } else if (emoji.name.includes("previous") && page !== 0) {
         --page;
-      }
+      } else return;
 
       embed.setDescription(helpPages[page]).setFooter({
         text: `Page ${page + 1} of ${totalPages}`,

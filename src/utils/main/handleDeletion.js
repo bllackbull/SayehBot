@@ -66,6 +66,8 @@ function handleInteractionDeletion(interaction, success) {
     commandName?.includes("leave") ||
     commandName?.includes("search") ||
     commandName?.includes("shuffle") ||
+    commandName?.includes("move") ||
+    commandName?.includes("remove") ||
     customId?.includes("lyrics") ||
     commandName?.includes("lyrics") ||
     success === "favorite"
@@ -153,8 +155,19 @@ function handleNonMusicalDeletion(
   const timer = success ? minutes : 2;
 
   setTimeout(async () => {
-    if (!success) await interaction.deleteReply().catch((e) => {});
-    else await interaction.editReply({ components: [] }).catch((e) => {});
+    if (!success) {
+      await interaction.deleteReply().catch((e) => {
+        console.log(
+          `${consoleTags.warning} Failed to delete ${interaction.commandName} command.`
+        );
+      });
+    } else {
+      await interaction.editReply({ components: [] }).catch((e) => {
+        console.log(
+          `${consoleTags.warning} Failed to edit ${interaction.commandName} command.`
+        );
+      });
+    }
   }, timer * 60_000);
 }
 

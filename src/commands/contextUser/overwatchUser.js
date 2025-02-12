@@ -170,12 +170,13 @@ module.exports = {
 
             collector.on("collect", async (reaction, user) => {
               if (user.bot) return;
+              const { users, emoji } = reaction;
 
-              await reaction.users.remove(user.id);
+              await users.remove(user.id);
 
-              if (reaction.emoji.name == "➡" && page < totalPages - 1) {
+              if (emoji.name.includes("next") && page < totalPages - 1) {
                 page++;
-              } else if (reaction.emoji.name == "⬅" && page !== 0) {
+              } else if (emoji.name.includes("previous") && page !== 0) {
                 --page;
               } else return;
 

@@ -13,12 +13,12 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("clearwarns")
     .setDescription(
-      `${utils.tags.mod} Clear all warnings of a user in this server`
+      `${utils.tags.mod} Clear all warnings of a user in this server.`
     )
     .addUserOption((option) =>
       option
         .setName("user")
-        .setDescription("Pick a member to clear their warns")
+        .setDescription("Pick a member to clear their warns.")
         .setRequired(true)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)

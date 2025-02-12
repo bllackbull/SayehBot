@@ -22,9 +22,15 @@ const XPreqs = [
   650_000, 670_000,
 ];
 
+const keyLevels = [0, 10, 20, 30, 40, 50, 60, 70];
+
+const keyPercentages = [20, 12, 10, 8, 6, 4, 2, 1];
+
 module.exports = {
   colors,
   fonts,
   maxLevel,
   XPreqs,
+  keyLevels,
+  keyPercentages,
 };

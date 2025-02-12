@@ -8,30 +8,32 @@ const {
 const utils = require("../../utils/main/mainUtils");
 const market = require("steam-market-pricing");
 const game = require("steam-searcher");
-const hltb = require("howlongtobeat");
+const Hltb = require("howlongtobeat");
 const { handleNoResultError } = require("../../utils/main/handleErrors");
 const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 
-const hltbService = new hltb.HowLongToBeatService();
+const hltbService = new Hltb.HowLongToBeatService();
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("steam")
-    .setDescription("Search in Steam")
+    .setDescription(`${utils.tags.game} Search in Steam.`)
     .addSubcommand((subcommand) =>
       subcommand
         .setName("market")
-        .setDescription(`${utils.tags.game} Search for an item in Steam market`)
+        .setDescription(
+          `${utils.tags.game} Search for an item in Steam market.`
+        )
         .addStringOption((option) =>
           option
             .setName("item")
-            .setDescription("Input the item name (Suggestion: key / ticket)")
+            .setDescription("Input an item name. (Suggestion: key / ticket)")
             .setRequired(true)
         )
         .addStringOption((option) =>
           option
             .setName("game")
-            .setDescription("Select the item's game")
+            .setDescription("Select an item's game source.")
             .setRequired(true)
             .addChoices(
               {
@@ -51,7 +53,7 @@ module.exports = {
         .addStringOption((option) =>
           option
             .setName("currency")
-            .setDescription("Select your currency")
+            .setDescription("Select your currency.")
             .setRequired(true)
             .addChoices(
               {
@@ -80,11 +82,11 @@ module.exports = {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("store")
-        .setDescription(`${utils.tags.game} Search for a game in Steam store`)
+        .setDescription(`${utils.tags.game} Search for a game in Steam store.`)
         .addStringOption((option) =>
           option
             .setName("input")
-            .setDescription("Input the game name")
+            .setDescription("Input a game name.")
             .setRequired(true)
         )
     ),
@@ -227,7 +229,8 @@ module.exports = {
 
               const hltb = await hltbService
                 .search(result.name)
-                .then((response) => response[0]);
+                .then((response) => response[0])
+                .catch(() => null);
 
               const url = `https://store.steampowered.com/app/${result.steam_appid}/${resultName}/`;
               const gameplay = hltb?.gameplayMain ?? "--";

@@ -9,11 +9,11 @@ const errorHandler = require("../../utils/main/handleErrors");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("clear")
-    .setDescription(`${utils.tags.mod} Clear the latest messages in a channel`)
+    .setDescription(`${utils.tags.mod} Clear the latest messages in a channel.`)
     .addIntegerOption((options) =>
       options
         .setName("amount")
-        .setDescription("Input the amount of messages to clear")
+        .setDescription("Input the amount of messages to clear.")
         .setMinValue(1)
         .setMaxValue(99)
         .setRequired(true)
@@ -21,7 +21,7 @@ module.exports = {
     .addChannelOption((options) =>
       options
         .setName("channel")
-        .setDescription("Choose a channel to clear messages in")
+        .setDescription("Choose a channel to clear messages in.")
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .setDMPermission(false),

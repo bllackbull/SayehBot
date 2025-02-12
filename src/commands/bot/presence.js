@@ -14,11 +14,11 @@ const { handleNonMusicalDeletion } = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("presence")
-    .setDescription(`${utils.tags.mod} Customize the presence of the bot`)
+    .setDescription(`${utils.tags.mod} Customize the presence of the bot.`)
     .addStringOption((option) =>
       option
         .setName("type")
-        .setDescription("Choose the type of the presence")
+        .setDescription("Choose the type of the presence.")
         .setRequired(true)
         .addChoices(
           {
@@ -46,13 +46,13 @@ module.exports = {
     .addStringOption((option) =>
       option
         .setName("name")
-        .setDescription("Input the name of the presence")
+        .setDescription("Input the name of the presence.")
         .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("status")
-        .setDescription("Choose the status of the bot")
+        .setDescription("Choose the status of the bot.")
         .setRequired(true)
         .addChoices(
           {

@@ -1,13 +1,13 @@
 const fs = require("fs");
 const { connection } = require("mongoose");
 const { useMainPlayer } = require("discord-player");
-const { setupTwitch } = require("../../utils/api/setupTwitch");
 const executing = require("node:process");
+const { connectWebSocket } = require("../../utils/api/connectWebSocket");
 
 module.exports = (client) => {
   client.handleEvents = async () => {
     const eventFolders = fs.readdirSync(`./src/events`);
-    const tracker = setupTwitch();
+    let ws = connectWebSocket();
 
     for (const folder of eventFolders) {
       const eventFiles = fs
@@ -18,7 +18,7 @@ module.exports = (client) => {
         case "client":
         case "logs":
         case "music":
-        case "server":
+        case "guild":
         case "level":
         case "notifications":
           for (const file of eventFiles) {
@@ -73,11 +73,15 @@ module.exports = (client) => {
           }
           break;
 
-        case "tracker":
+        case "api":
           for (const file of eventFiles) {
             const event = require(`../../events/${folder}/${file}`);
 
-            tracker.on(event.name, (...args) => event.execute(...args, client));
+            if (event.name === "close") ws = connectWebSocket();
+
+            ws.on(event.name, (...args) => {
+              event.execute(...args, client);
+            });
           }
           break;
 

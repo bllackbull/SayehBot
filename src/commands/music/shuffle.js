@@ -7,7 +7,7 @@ const deletionHandler = require("../../utils/main/handleDeletion");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("shuffle")
-    .setDescription("Shuffle the current queue")
+    .setDescription("Shuffle the current queue.")
     .setDMPermission(false),
 
   async execute(interaction, client) {
