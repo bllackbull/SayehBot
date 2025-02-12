@@ -36,7 +36,7 @@ module.exports = {
       option
         .setName("guess")
         .setDescription(
-          "Guess right your upcoming roll to win 10,000 XP! (1 - 100 only)"
+          "Guess right your upcoming roll to win 50,000 XP! (1 - 100 only)"
         )
         .setMinValue(1)
         .setMaxValue(100)
